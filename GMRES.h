@@ -139,7 +139,7 @@ int GMRES
  int krylovDimension,      //!< The number of vectors to generate in the Krylov subspace.
  int numberRestarts,       //!< Number of times to repeat the GMRES iterations.
  int approxLength,         //!< Total number of points being tracked in an approximation.
- Double tolerance          //!< How small the residual should be to terminate the GMRES iterations.
+ Double  tolerance         //!< How small the residual should be to terminate the GMRES iterations.
  )
 {
 
@@ -265,6 +265,7 @@ int GMRES
 							ArrayUtils<double>::deltwotensor(H);
 							ArrayUtils<double>::delonetensor(s);
 							delete [] V;
+							//tolerance = rho/normRHS;
 							return(iteration);
 						}
 
@@ -282,6 +283,7 @@ int GMRES
 	ArrayUtils<double>::deltwotensor(H);
 	ArrayUtils<double>::delonetensor(s);
 	delete [] V;
+	//tolerance = rho/normRHS;
 
 	if(rho < tolerance*normRHS)
 		return(iteration);

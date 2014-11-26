@@ -34,7 +34,6 @@
 #include "solution.h"
 #include "preconditioner.h"
 #include "matrix.h"
-//#include "gmres.h"
 #include "GMRES.h"
 
 #include <iostream>
@@ -45,33 +44,35 @@
 int main(int argc,char **argv)
 {
 
-    Poisson *elliptical = new Poisson;
-	Solution *x = new Solution(NUMBER);
-	Solution *b = new Solution(NUMBER);
-	Preconditioner pre(NUMBER);
-	Matrix upper(41,40);
+    Poisson *elliptical = new Poisson;   // The operator to invert.
+	Solution *x = new Solution(NUMBER);  // The approximation to calculate.
+	Solution *b = new Solution(NUMBER);  // The forcing function for the r.h.s.
+	Preconditioner pre(NUMBER);          // A preconditioner for the system.
+
+	int restart = 10;                    // Number of restarts to allow
+	int maxIt = 41;                      // Dimension of the Krylov subspace
+	double tol = 1.0E-8;                 // How close to make the approximation.
 
 	int lupe;
-
-	int restart = 10;
-	int maxIt = 41;
-	double tol = 1.0E-8;
-
 	for(lupe=0;lupe<=NUMBER;++lupe)
 		{
+			// initialize the r.h.s to be something we know the
+			// solution for. Also, set the initial approximation if
+			// wanted.
 			double xgrid = elliptical->getX(lupe);
 			//b(lupe) = -81.0*M_PI*M_PI*sin(9.0*M_PI*xgrid);
 			(*b)(lupe) = 90.0*pow(xgrid,8.0)-2.0;
 			(*x)(lupe) = 0.0; //pow(xgrid,10.0)/90.0 - xgrid*xgrid/91;
 		}
+
+	// Set the boundary conditions separately.
 	(*b)(0) = 0.0;
 	(*b)(NUMBER) = -0.0;
 
+	// Find an approximation to the system!
 	int result= GMRES(elliptical,x,b,maxIt,restart,NUMBER,tol);
-	//int result = GMRES(elliptical,x,b,pre,upper,restart,maxIt,tol);
-	//Solution y = elliptical*x;
 
-	//std::cout << "max iter: " << restart << " max it: " << maxIt << " result: " << result << std::endl;
+	std::cout << "Iterations: " << result << " residual: " << tol << std::endl;
 #define SOLUTION
 #ifdef SOLUTION
 //std::cout << "x,approx,true," << result << std::endl;
