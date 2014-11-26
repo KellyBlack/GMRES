@@ -1,0 +1,5 @@
+*.o
+gmres.h
+originalSolver
+systemSolver
+
