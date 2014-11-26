@@ -24,9 +24,9 @@ LINK =   -lm
 all:	systemSolver originalSolver
 
 
-systemSolver:	systemSolver.o poisson.h poisson.o solution.o solution.h util.h util.o matrix.o matrix.h preconditioner.o preconditioner.h GMRES.h
+systemSolver:	systemSolver.o poisson.h poisson.o solution.o solution.h util.h util.o preconditioner.o preconditioner.h GMRES.h
 	echo $@
-	$(CC) -o $@ $@.o  poisson.o solution.o util.o matrix.o preconditioner.o $(LINK) 
+	$(CC) -o $@ $@.o  poisson.o solution.o util.o preconditioner.o $(LINK) 
 
 originalSolver:	originalSolver.o poisson.h poisson.o solution.o solution.h util.h util.o matrix.o matrix.h preconditioner.o preconditioner.h gmres.h
 	echo $@

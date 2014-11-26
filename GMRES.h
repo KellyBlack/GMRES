@@ -168,7 +168,7 @@ int GMRES
 		normRHS = 1.0;
 
 	// Go through the requisite number of restarts.
-	int iteration;
+	int iteration = 1;
 	while( (--numberRestarts >= 0) && (rho > tolerance*normRHS))
 		{
 
@@ -196,7 +196,7 @@ int GMRES
 					for(row=0;row<=iteration;++row)
 						{
 							H[row][iteration] = Approximation::dot(V[iteration+1], V[row]);
-							//V[iteration+1] -= V[row]*H[row][iteration];
+							//subtract H[row][iteration]*V[row] from the current vector
 							V[iteration+1].axpy(&V[row],-H[row][iteration]);
 						}
 
