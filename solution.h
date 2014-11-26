@@ -75,6 +75,17 @@ public:
 	Solution operator+=(const Solution& vector);   //< Operator for adding another Solution object.
 
 
+	/** Definition of the dot product of two approximation vectors. */
+	static double dot (const Solution& v1,const Solution& v2);
+	static double dot (Solution* v1,Solution* v2);
+
+	/** Definition of the l2 norm of an approximation vector. */
+	static double norm(const Solution& v1);
+	double norm();
+
+	/** Definition of the axpy procedure. */
+	void axpy(Solution* vector,double multiplier);
+
 	/** ************************************************************************
 	 * The method to set the value of the entry in a row of the solution.
 	 * 
@@ -90,13 +101,6 @@ public:
 	}
 
 
-	/** Definition of the dot product of two approximation vectors. */
-	static double dot (const Solution& v1,const Solution& v2);
-	static double dot (Solution* v1,Solution* v2);
-
-	/** Definition of the l2 norm of an approximation vector. */
-	static double norm(const Solution& v1);
-	double norm();
 
 	/**
 		 Method to set the number of elements to use for the length of the approximation.

@@ -403,3 +403,23 @@ double Solution::norm()
 		}
 	return(sqrt(norm));
 }
+
+
+/** ************************************************************************
+ * The method to perform an axpy procedure.
+ * 
+ * Subtracts multipler*vector from the current approximation.
+ *
+ * @param The vector to add
+ * @param The scalar multiple to add
+ * @return N/A
+ * ************************************************************************ */
+void Solution::axpy(Solution* vector,
+					double multiplier)
+{
+	int lupe;
+	for(lupe=getN();lupe>0;--lupe)
+		{
+			setEntry(getEntry(lupe)+multiplier*vector->getEntry(lupe),lupe);
+		}
+}

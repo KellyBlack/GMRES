@@ -196,7 +196,8 @@ int GMRES
 					for(row=0;row<=iteration;++row)
 						{
 							H[row][iteration] = Approximation::dot(V[iteration+1], V[row]);
-							V[iteration+1] -= V[row]*H[row][iteration];
+							//V[iteration+1] -= V[row]*H[row][iteration];
+							V[iteration+1].axpy(&V[row],-H[row][iteration]);
 						}
 
 					H[iteration+1][iteration] = V[iteration+1].norm();
