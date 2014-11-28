@@ -3,6 +3,7 @@
  * @file GMRES.h
  * @author Kelly Black <kjblack@gmail.com>
  * @version 0.1
+ * @copyright BSD 2-Clause License
  *
  * @section LICENSE
  *
@@ -77,11 +78,14 @@
  *
  * @brief Template files for implementing a GMRES algorithm to solve a linear sytem.
  *
+ * @todo Double check and make use of the approxLength argument in the GMRES routine.
+ * @todo change the citations above to use the doxygen @cite command.
+ *
  * ********************************************************************************* */
 
 #include "util.h"
 #include <cmath>
-
+#include <vector>
 
 /** ************************************************************************
  * Update the current approximation to the solution to the linear
@@ -94,12 +98,12 @@
  * @return N/A
  ************************************************************************ */
 template <class Approximation, class Double >
-void 
-Update(Double **H,         //<! The upper diagonal matrix constructed in the GMRES routine.
-	   Approximation *x,   //<! The current approximation to the linear system.
-	   Double *s,          //<! The vector e_1 that has been multiplied by the Givens rotations.
-	   Approximation v[],  //<! The orthogonal basis vectors for the Krylov subspace.
-	   int dimension)      //<! The number of vectors in the basis for the Krylov subspace.
+void Update
+(Double **H,         //<! The upper diagonal matrix constructed in the GMRES routine.
+ Approximation *x,   //<! The current approximation to the linear system.
+ Double *s,          //<! The vector e_1 that has been multiplied by the Givens rotations.
+ std::vector<Approximation> *v,  //<! The orthogonal basis vectors for the Krylov subspace.
+ int dimension)      //<! The number of vectors in the basis for the Krylov subspace.
 {
 
   // Solve for the coefficients, i.e. solve for c in
@@ -117,8 +121,9 @@ Update(Double **H,         //<! The upper diagonal matrix constructed in the GMR
 	  }
 
   // Finally update the approximation.
+	typename std::vector<Approximation>::iterator ptr = v->begin();
   for (lupe = 0; lupe <= dimension; lupe++)
-	  *x += v[lupe] * s[lupe];
+	  *x += (*ptr++) * s[lupe];
 }
 
 
@@ -159,8 +164,9 @@ int GMRES
 
 	// Determine the residual and allocate the space for the Krylov
 	// subspace.
+	std::vector<Approximation> V(krylovDimension+1,
+															 Approximation(solution->getN()));
 	Approximation residual = (*rhs)-(*linearization)*(*solution);
-	Approximation *V       = new Approximation[krylovDimension+1]; 
 	Double rho             = residual.norm();
 	Double normRHS         = rhs->norm();
 
@@ -190,14 +196,15 @@ int GMRES
 					// the Krylov subspace.
 					V[iteration+1] = (*linearization)*V[iteration];
 
-					// Perform the modified Gram-Schmidt to orthogonalize the
-					// new vector.
+					// Perform the modified Gram-Schmidt method to orthogonalize
+					// the new vector.
 					int row;
+					typename std::vector<Approximation>::iterator ptr = V.begin();
 					for(row=0;row<=iteration;++row)
 						{
-							H[row][iteration] = Approximation::dot(V[iteration+1], V[row]);
+							H[row][iteration] = Approximation::dot(V[iteration+1], *ptr);
 							//subtract H[row][iteration]*V[row] from the current vector
-							V[iteration+1].axpy(&V[row],-H[row][iteration]);
+							V[iteration+1].axpy(&(*ptr++),-H[row][iteration]);
 						}
 
 					H[iteration+1][iteration] = V[iteration+1].norm();
@@ -260,11 +267,11 @@ int GMRES
 					if(rho < tolerance*normRHS)
 						{
 							// We are close enough! Update the approximation.
-							Update(H,solution,s,V,iteration);
+							Update(H,solution,s,&V,iteration);
 							ArrayUtils<double>::deltwotensor(givens);
 							ArrayUtils<double>::deltwotensor(H);
 							ArrayUtils<double>::delonetensor(s);
-							delete [] V;
+							//delete [] V;
 							//tolerance = rho/normRHS;
 							return(iteration);
 						}
@@ -273,7 +280,7 @@ int GMRES
 
 			// We have exceeded the number of iterations. Update the
 			// approximation and start over.
-			Update(H,solution,s,V,iteration-1);
+			Update(H,solution,s,&V,iteration-1);
 			residual = (*linearization)*(*solution) - (*rhs);
 			rho = residual.norm();
 		}
@@ -282,7 +289,7 @@ int GMRES
 	ArrayUtils<double>::deltwotensor(givens);
 	ArrayUtils<double>::deltwotensor(H);
 	ArrayUtils<double>::delonetensor(s);
-	delete [] V;
+	//delete [] V;
 	//tolerance = rho/normRHS;
 
 	if(rho < tolerance*normRHS)
