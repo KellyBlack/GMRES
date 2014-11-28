@@ -5,6 +5,7 @@
  * @class Solution
  * @author Kelly Black <kjblack@gmail.com>
  * @version 0.1
+ * @copyright BSD 2-Clause License
  *
  * @section LICENSE
  *
@@ -77,7 +78,8 @@ Solution::Solution(int size)
 /** ************************************************************************
  *		Copy constructor  for the Solution class. 
  *
- *	@param oldCopy The Solution class member to make a copy of.
+ * @overload
+ * @param oldCopy The Solution class member to make a copy of.
  * ************************************************************************ */
 Solution::Solution(const Solution& oldCopy)
 {
@@ -144,6 +146,7 @@ Solution Solution::operator=(const Solution& vector)
  * Returns a new Solution object in which every entry in the vector is
  * the same as the double precision number passed to it.
  *
+ * @overload
  * @param value The value to copy into the vector.
  * @return An object from the Solution class.
  * ************************************************************************ */
@@ -231,6 +234,7 @@ Solution Solution::operator*(const double& value)
  * Returns the dot product of this object and another object in the
  * Solution class.
  *
+ * @overload
  * @param vector The other solution object to use for the dot product.
  * @return the dot product.
  * ************************************************************************ */
@@ -312,6 +316,7 @@ Solution Solution::operator+=(const Solution& vector)
  * Returns a new Solution object which is found by multiplying each
  * element from the passed Solution object by the scalar value.
  *
+ * @relates Solution
  * @param value The scalar value (Double) to multiply.
  * @param vector The Solution object to multiply the scalar by.
  * @return An object from the Solution class.
@@ -350,6 +355,7 @@ double Solution::dot(const Solution& v1,const Solution& v2)
  * 
  * Takes two solution vectors and computes their dot product. 
  *
+ * @overload
  * @param value The first Solution object to use.
  * @param row The second Solution object to use.
  * @return The scalar dot product.
@@ -391,6 +397,7 @@ double Solution::norm(const Solution& v1)
  * 
  * Determines the l2 norm of the associated object.
  *
+ * @overload
  * @return The norm of the Solution object.
  * ************************************************************************ */
 double Solution::norm()

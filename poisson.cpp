@@ -4,6 +4,7 @@
  * @class Poisson
  * @author Kelly Black <kjblack@gmail.com>
  * @version 0.1
+ * @copyright BSD 2-Clause License
  *
  * @section LICENSE
  *
