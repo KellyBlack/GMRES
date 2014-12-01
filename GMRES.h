@@ -36,50 +36,27 @@
  * @section DESCRIPTION
  *
  * This file includes the template functions necessary to implement a
- * restarted GMRES algorithm. This is based on the pseudo code given in the book: 
- * 
- * @BOOK{templates,
- *    AUTHOR = {R. Barrett and M. Berry and T. F. Chan and J. Demmel and J. Donato and 
- *              J. Dongarra and V. Eijkhout and R. Pozo and C. Romine and H. Van der Vorst },
- *    TITLE = {Templates for the Solution of Linear Systems: 
- *                Building Blocks for Iterative Methods, 2nd Edition},
- *    PUBLISHER = {SIAM},
- *    YEAR = {1994},
- *    ADDRESS = {Philadelphia, PA} }
+ * restarted GMRES algorithm. This is based on the pseudo code given
+ * in the book Templates for the Solution of Linear Systems: Building
+ * Blocks for Iterative Methods, 2nd Edition @cite templates .
  * 
  * Also, some changes were implemented based on the matlab code by
- * John Burkardt
- * (http://people.sc.fsu.edu/~jburkardt/m_src/toms866/solvers/gmres_r.m
- * accessed 25 November 2015, which is based on a code by Time
- * Kelley.)
+ * John Burkardt @cite BurkardtCode
+ * http://people.sc.fsu.edu/\textasciitilde jburkardt/m_src/toms866/solvers/gmres_r.m
  *
- * The idea for using a template came from the IML++ code available at
- * http://math.nist.gov/iml++/ (accessed 26 November 2014). Also, the
- * method for calculating the entries for the Givens rotation matrices
- * came from the IML++ code as well.
+ * The idea for using a template came from the IML++ code @cite imlCode
+ * http://math.nist.gov/iml++/
+ * Also, the method for calculating the entries for the Givens
+ * rotation matrices came from the IML++ code as well.
  *
- * Additional sources that informed this work:
- * @BOOK{iterativeMethods,
- *     AUTHOR = {Tim Kelley},
- *     TITLE = {Iterative Methods for Linear and Nonlinear Equations},
- *     PUBLISHER = {SIAM}
- *     YEAR={2004},
- *     ADDRESS = {Philadelphia, PA},
- *     ISBN={0898713528} }
- *
- * @BOOK{sparseIterative,
- *       AUTHOR = {Yousef Saad},
- *       TITLE = {Iterative Methods for Sparse Linear Systems},
- *       EDITION = {Second Edition},
- *       PUBLISHER = {SIAM}
- *       YEAR={2003},
- *       ADDRESS = {Philadelphia, PA},
- *       ISBN={0898715342} } 
+ * Additional sources that informed this work are Tim Kelley's book
+ * Iterative Methods for Linear and Nonlinear Equations @cite iterativeMethods
+ * Another book is is Yousef Saad's book Iterative Methods for 
+ * Sparse Linear Systems  @cite sparseIterative
  *
  * @brief Template files for implementing a GMRES algorithm to solve a linear sytem.
  *
  * @todo Double check and make use of the approxLength argument in the GMRES routine.
- * @todo change the citations above to use the doxygen @cite command.
  *
  * ********************************************************************************* */
 
