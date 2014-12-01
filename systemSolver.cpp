@@ -70,7 +70,7 @@ int main(int argc,char **argv)
 	(*b)(NUMBER) = -0.0;
 
 	// Find an approximation to the system!
-	int result= GMRES(elliptical,x,b,maxIt,restart,NUMBER,tol);
+	int result= GMRES(elliptical,x,b,maxIt,restart,tol);
 
 	std::cout << "Iterations: " << result << " residual: " << tol << std::endl;
 #define SOLUTION

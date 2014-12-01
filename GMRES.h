@@ -56,8 +56,6 @@
  *
  * @brief Template files for implementing a GMRES algorithm to solve a linear sytem.
  *
- * @todo Double check and make use of the approxLength argument in the GMRES routine.
- *
  * ********************************************************************************* */
 
 #include "util.h"
@@ -120,7 +118,6 @@ int GMRES
  Approximation* rhs,       //!< the right hand side of the equation to solve.
  int krylovDimension,      //!< The number of vectors to generate in the Krylov subspace.
  int numberRestarts,       //!< Number of times to repeat the GMRES iterations.
- int approxLength,         //!< Total number of points being tracked in an approximation.
  Double  tolerance         //!< How small the residual should be to terminate the GMRES iterations.
  )
 {
