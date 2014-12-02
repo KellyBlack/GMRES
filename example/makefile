@@ -21,20 +21,16 @@ LINK =   -lm
 	$(CC) $(CFLAGS) -c $<
 
 
-all:	systemSolver originalSolver
+all:	systemSolver 
 
 
 systemSolver:	systemSolver.o poisson.h poisson.o solution.o solution.h preconditioner.o preconditioner.h 
 	echo $@
 	$(CC) -o $@ $@.o  poisson.o solution.o preconditioner.o $(LINK) 
 
-originalSolver:	originalSolver.o poisson.h poisson.o solution.o solution.h util.h util.o matrix.o matrix.h preconditioner.o preconditioner.h gmres.h
-	echo $@
-	$(CC) -o $@ $@.o  poisson.o solution.o util.o matrix.o preconditioner.o $(LINK) 
-
 
 clean:	
-	rm -f *.o systemSolver originalSolver
+	rm -f *.o systemSolver 
 
 
 
