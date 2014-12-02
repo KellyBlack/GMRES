@@ -1,0 +1,336 @@
+
+
+\section{Introduction}
+
+The codes given here are a free implementation of the Generalized
+Minimal Residual Method (GMRES) in c++. The method is fully described
+by Saad\cite{sparseIterative} and Kelley\cite{iterativeMethods}. The
+code given here is based on the pseudo code given by Barrett
+\textit{et al}\cite{templates}. The codes were adapted to c++ after
+examining the matlab codes by Burkardt\cite{BurkardtCode}. This
+specific implementation makes use of restarts, and it was most
+influenced by the code available from the United States' National
+Institute of Standards and Technology\cite{imlCode}.
+
+The GMRES algorithm is defined in the file GMRES.h. The algorithm is
+given in a template function, named {\tt GMRES}. The subroutine
+assumes that three classes are defined that include several specific
+operators and functions. There is an additional subroutine called by
+{\tt GMRES} named {\tt Update}. This subroutine is used to generate an
+updated approximation based on the Krylov subspace generated within
+the {\tt GMRES} subroutine.
+
+There is an additional set of subroutines that are used within the
+{\tt GMRES} subroutine. These routines are defined in the files {\tt
+  util.h} and {\tt util.cpp}. The file {\tt util.h} includes the file
+{\tt util.cpp}. Both files are assumed to be in the same directory as
+the {\tt GMRES.h} file.
+
+In this overview the call for the GMRES routine is first given, and
+then the three required classes are stated in turn. First the {\tt
+  Operation} class is discussed, then the {\tt Approximation} class,
+and finally the {\tt Preconditioner} class is discussed. Each class
+must implement specific operations and define a given set of
+methods. The expectations are given within each section.
+
+
+\section{Calling the GMRES Subroutine}
+
+The GMRES routine is named {\tt GMRES}, and the definition for the
+method is given in Listing \ref{listing:GMRESDefinition}. There are
+seven parameters for the function. The first four parameters are
+pointers to the respective classes. The next three parameters dictate
+the behaviour and limits of the GMRES implementation and include the
+number of vectors in the Krylov subspace, the number of restarts, and
+the tolerance respectively.
+
+
+\begin{lstlisting}[caption={The definition for the GMRES routine.},
+                   basicstyle=\scriptsize,
+                   label=listing:GMRESDefinition]
+template<class Operation,class Approximation,class Preconditioner,class Double>
+int GMRES
+(Operation* linearization, //!< Performs the linearization of the PDE on the approximation.
+ Approximation* solution,  //!< The approximation to the linear system. (and initial estimate!)
+ Approximation* rhs,       //!< the right hand side of the equation to solve.
+ Preconditioner* precond,  //!< The preconditioner used for the linear system.
+ int krylovDimension,      //!< The number of vectors to generate in the Krylov subspace.
+ int numberRestarts,       //!< Number of times to repeat the GMRES iterations.
+ Double  tolerance         //!< How small the residual should be to terminate the GMRES iterations.
+ )
+\end{lstlisting}
+
+The basic idea is that an approximation to a linear system is to be
+generated. The system can be represented by
+\begin{eqnarray}
+  \label{eqn:basicLinearSystem}
+  L \vec{x} & = & \vec{b}.
+\end{eqnarray}
+The parameters in the subroutine correspond to the following symbols
+in equation (\ref{eqn:basicLinearSystem}):
+\begin{eqnarray*}
+  L & = & {\tt linearization}, \\
+  \vec{x} & = & {\tt solution}, \\
+  \vec{b} & = & {\tt rhs}.
+\end{eqnarray*}
+
+The parameter in the {\tt Operation} class, {\tt linearization}, is
+used to implement the action of the matrix multiplied by a vector. The
+vector is given by an object in the {\tt Approximation} class which
+includes the initial estimate, {\tt solution}, and the right hand
+side, {\tt rhs}. The variable {\tt solution} is updated, and it is
+changed by calling the routine. 
+
+The final class, {\tt Preconditioner}, is used to implement a
+preconditioner for the system. The assumption is that the
+preconditioned system is in the form
+\begin{eqnarray*}
+  P^{-1} L \vec{x} & = & P^{-1} \vec{b}.
+\end{eqnarray*}
+The GMRES algorithm requires that the operator, {\tt precond} in the
+GMRES routine, be used to generate a sequence of vectors given by
+\begin{eqnarray*}
+  \vec{v}_{n+1} & = & L \hat{v}_n,
+\end{eqnarray*}
+where $\hat{v}_n$ is a normalized vector that is orthogonal to the
+previous vectors generated. The {\tt GMRES} subroutine calculates this
+under the assumption that the system to solve is given by the system
+\begin{eqnarray}
+  \label{eqn:preconditionerSolver}
+  P \vec{v}_{n+1} & = & L \hat{v}_n,
+\end{eqnarray}
+where the routine solves for the vector $\vec{v}_{n+1}$.
+
+
+\begin{lstlisting}[caption={The definition for the Update routine.},
+                   basicstyle=\scriptsize,
+                   label=listing:updateDefinition]
+template <class Approximation, class Double >
+void 
+Update
+(Double **H,       //<! The upper diagonal matrix constructed in the GMRES routine.
+ Approximation *x, //<! The current approximation to the linear system.
+ Double *s,        //<! The vector e_1 that has been multiplied by the Givens rotations.
+ std::vector<Approximation> *v,  //<! The orthogonal basis vectors for the Krylov subspace.
+ int dimension)    //<! The number of vectors in the basis for the Krylov subspace.
+)
+\end{lstlisting}
+
+Finally, the file includes an additional subroutine, {\tt
+  Update}. This subroutine is used to perform the back-solve and
+update to determine the next approximation to the linear system. This
+is used within the {\tt GMRES} subroutine and is not expected to be
+called by another routine.
+
+
+\section{The Operation Class}
+
+The first class examined is the {\tt Operation} class. This class is
+used to perform the actions equivalent to a matrix multiply. It is
+assumed that this is in the form of a right multiply, i.e.
+\begin{eqnarray*}
+  L \cdot \vec{x}.
+\end{eqnarray*}
+
+\begin{lstlisting}[caption={An example of the multiply operation
+    defined for the Operation class.},
+                   basicstyle=\scriptsize,
+                   label=listing:operationMultiply]
+Approximation Operation::operator*(class Approximation vector)
+{
+  	Solution result;
+    ...
+    return(result);
+}
+\end{lstlisting}
+
+The {\tt Operation} class must have a number of operations defined. In
+particular the class should have the multiply operator defined. An
+example of the required definition is given in Listing
+\ref{listing:operationMultiply}.
+
+
+
+\section{The Approximation Class}
+
+The {\tt Approximation} class is used to keep track of the
+approximation to the solution to the linear system. It is the class
+used to store $\vec{x}$ as well as $\vec{b}$ in equation
+(\ref{eqn:basicLinearSystem}). It is assumed that the {\tt
+  Approximation} class has a number of methods and operations defined,
+and the complete list is given in Table
+\ref{tab:approximationOperations}.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|l}
+    Methods & Operations \\ \hline
+    {\tt norm}     & $+$ \\
+    {\tt getN}     & $-$ \\
+    2 constructors & $+=$ \\
+    axpy           & $=$ \\
+                   & $*$
+  \end{tabular}
+  \caption{The methods and operations that must be defined for the {\tt Approximation} class.}
+  \label{tab:approximationOperations}
+\end{table}
+
+Examples of the basic form for the definitions are given in Listing
+\ref{listing:approximationOperations}. Note the types of the
+arguments. For example, the addition operator is for the sum of two
+objects from the {\tt Approximation} class while the multiplication
+operator is for an object from the {\tt Approximation} class
+multiplied on the right by a real valued variable.
+
+
+\begin{lstlisting}[caption={An example of the operations that must be
+    defined for the {\tt Approximation} class.},
+                   basicstyle=\scriptsize,
+                   label=listing:approximationOperations]
+
+Approximation Approximation::operator+(const Approximation& vector)
+{
+	Approximation result(this->getN());
+    ...
+	return(result);
+}
+
+
+Approximation Approximation::operator-(const Approximation& vector)
+{
+	Approximation result(this->getN());
+    ...
+	return(result);
+}
+
+Approximation Approximation::operator+=(const Approximation& vector)
+{
+    ...
+	return(*this);
+}
+
+Approximation Approximation::operator=(const Approximation& vector)
+{
+    ...
+	return(*this);
+}
+
+Approximation Approximation::operator*(const double& value)
+{
+	Approximation result(this->getN());
+    ...
+	return(result);
+}
+
+\end{lstlisting}
+
+There are four methods that must be defined for the {\tt
+  Approximation} class. Examples of the definitions are shown in
+Listing \ref{listing:approximationMethods}. Note that there are two
+constructors that must be called. The first is a constructor that
+requires the number of entries to allocate in the approximation. The
+second is a constructor that makes a copy of the {\tt Approximation}
+object passed to it.
+
+Also note that the {\tt axpy} method is a method that adds a scalar
+multiplied by another {\tt Approximation} object to the current
+object. This method is used in the modified Gramm-Schmidt
+orthogonalization of the vectors that make up the Krylov subspace.
+
+\begin{lstlisting}[caption={An example of the methods that must be
+    defined for the {\tt Approximation} class.},
+                   basicstyle=\scriptsize,
+                   label=listing:approximationMethods]
+
+Approximation::Approximation(int size)
+{
+  ...
+}
+
+Approximation::Approximation(const Approximation& oldCopy)
+{
+  ...
+}
+
+double Approximation::norm(const Approximation& v1)
+{
+	double norm = v1.getEntry(0)*v1.getEntry(0);
+	int lupe;
+	for(lupe=v1.getN();lupe>0;--lupe)
+		{
+			norm += v1.getEntry(lupe)*v1.getEntry(lupe);
+		}
+	return(sqrt(norm));
+}
+
+
+int Approximation::getN() const
+{
+  return(N);
+}
+
+void Approximation::axpy(Approximation* vector,
+					double multiplier)
+{
+	int lupe;
+	for(lupe=getN();lupe>0;--lupe)
+		{
+			setEntry(getEntry(lupe)+multiplier*vector->getEntry(lupe),lupe);
+		}
+}
+
+\end{lstlisting}
+
+
+
+\section{The Preconditioner Class}
+
+The final class is the {\tt Preconditioner} class. This class only
+requires one method, the {\tt solve} method. This method is used to
+solve the system given in equation
+(\ref{eqn:preconditionerSolver}). An example of the definition is
+given in Listing \ref{listing:preconditionerMethods}. Notice that it
+returns an object from the {\tt Approximation} class.
+
+
+\begin{lstlisting}[caption={An example of the solve method that must be
+    defined for the {\tt Preconditioner} class.},
+                   basicstyle=\scriptsize,
+                   label=listing:preconditionerMethods]
+
+Approximation Preconditioner::solve(const Approximation &current)
+{
+	Approximation multiplied(current);
+
+	// Perform the forward solve to invert the first part of the
+	// Cholesky decomposition.
+	int lupe;
+	intermediate[0] = current.getEntry(0)/vector[0][0];
+	for(lupe=1;lupe<=getN();++lupe)
+		intermediate[lupe] = 
+			(current.getEntry(lupe)-vector[lupe][1]*intermediate[lupe-1])
+			/vector[lupe][0];
+
+	// Perform the backwards solve for the Cholesky decomposition.
+	multiplied(getN()) = intermediate[getN()]/vector[getN()][0];
+	for(lupe=getN()-1;lupe>=0;--lupe)
+		multiplied(lupe) = (intermediate[lupe]-multiplied(lupe+1)*vector[lupe+1][1])
+			/vector[lupe][0];
+
+	// The previous solves wiped out the boundary conditions. Restore
+	// the left and right boundaru condition before sending the result
+	// back.
+	multiplied(0) = current.getEntry(0);
+	multiplied(getN()) = current.getEntry(getN());
+	return(multiplied);
+}
+
+
+\end{lstlisting}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "doxygenHeader"
+%%% End: 
