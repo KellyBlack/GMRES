@@ -53,7 +53,7 @@
 
 #include "poisson.h"
 #include "solution.h"
-#include "util.h"
+#include "../util.h"
 
 #include <cmath>
 

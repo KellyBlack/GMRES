@@ -33,7 +33,6 @@
 #include "poisson.h"
 #include "solution.h"
 #include "preconditioner.h"
-#include "matrix.h"
 #include "../GMRES.h"
 
 #include <iostream>

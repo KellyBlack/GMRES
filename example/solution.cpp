@@ -57,7 +57,7 @@
 
 #include "solution.h"
 #include "poisson.h"
-#include "util.h"
+#include "../util.h"
 
 /** ************************************************************************
  * Base constructor  for the Solution class. 
