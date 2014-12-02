@@ -34,7 +34,7 @@
 #include "solution.h"
 #include "preconditioner.h"
 #include "matrix.h"
-#include "GMRES.h"
+#include "../GMRES.h"
 
 #include <iostream>
 #include <cmath>
