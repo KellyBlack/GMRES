@@ -96,9 +96,9 @@ public:
 		 @param row Row in the vector you want to access.
 		 @return The value of the vector for the given row.
 	 */
-	double getValue(int row) const
+	double getValue(int row,int col) const
 	{
-		return(vector[row]);
+		return(vector[row][col]);
 	}
 
 
@@ -107,8 +107,10 @@ protected:
 
 private:
 
-	int N;          //< The number of grid points associated with the approximation.
-	double *vector; //< The vector that has the reciprocol of the diagonal entries of the operator.
+	int N;           //< The number of grid points associated with the approximation.
+	double **vector; //< The vector that has the reciprocol of the diagonal entries of the operator.
+	double *intermediate; //< Vector used for the intermediate results
+						  //in the backwards solve for inverting the preconditioner.
 
 };
 

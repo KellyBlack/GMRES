@@ -46,7 +46,8 @@ int main(int argc,char **argv)
     Poisson *elliptical = new Poisson;   // The operator to invert.
 	Solution *x = new Solution(NUMBER);  // The approximation to calculate.
 	Solution *b = new Solution(NUMBER);  // The forcing function for the r.h.s.
-	Preconditioner pre(NUMBER);          // A preconditioner for the system.
+	Preconditioner *pre = 
+		new Preconditioner(NUMBER);      // The preconditioner for the system.
 
 	int restart = 10;                    // Number of restarts to allow
 	int maxIt = 41;                      // Dimension of the Krylov subspace
@@ -69,7 +70,7 @@ int main(int argc,char **argv)
 	(*b)(NUMBER) = -0.0;
 
 	// Find an approximation to the system!
-	int result= GMRES(elliptical,x,b,maxIt,restart,tol);
+	int result= GMRES(elliptical,x,b,pre,maxIt,restart,tol);
 
 	std::cout << "Iterations: " << result << " residual: " << tol << std::endl;
 #define SOLUTION

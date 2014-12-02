@@ -66,23 +66,35 @@
  * ************************************************************************ */
 Preconditioner::Preconditioner(int number)
 {
-  setN(number);
-	// allocate the vector with the reciprocol of the diagonal entries
-	// of the operator.
-	vector = ArrayUtils<double>::onetensor(number+1);
+	setN(number);
+	// allocate the vector with the lower diagonal matrix entries for
+	// the Cholesky decomposition of the second order finite
+	// difference operator for the same equation.
+	vector = ArrayUtils<double>::twotensor(number+1,2);
 
-	// Define the values for the vector....
+	// Allocate the vector required to keep the intermediate results
+	// of the solver when doing the backwards and forward solve from
+	// the Cholesky decomposition.
+	intermediate = ArrayUtils<double>::onetensor(number+1);
+
+	// Define the values for the Cholesky decomposition of the finite
+	// difference operator. This is the Cholesky decomposition of the
+	// second order finite difference approximation of a Helmholtz
+	// operator, d^2/dx^2 u + m*u.
 	int lupe;
-	vector[0] = 1.0;
-	double xnum = (double)number;
-  double dxnum = 1.0/((double)number);
-	for(lupe=1;lupe<number;++lupe)
+	double m = 0.0;
+	double r = 2.0 + m;
+	for(lupe=0;lupe<=number;++lupe)
 		{
-			double tmp = sin(M_PI*((double)lupe)*dxnum);
-			tmp *= tmp;
-			vector[lupe] = (3.0*tmp*tmp)/(-((xnum*xnum-1.0)*tmp+3.0));
+			vector[lupe][0] = sqrt(r);
+			r = (r*(2+m)-1)/r;
 		}
-	vector[number] = 1.0;
+
+	for(lupe=1;lupe<=number;++lupe)
+		{
+			vector[lupe][1] = -1.0/vector[lupe-1][0];
+		}
+
 }
 
 
@@ -93,12 +105,17 @@ Preconditioner::Preconditioner(int number)
  * ************************************************************************ */
 Preconditioner::Preconditioner(const Preconditioner& oldCopy)
 {
-  setN(oldCopy.getN());
+	setN(oldCopy.getN());
 	// Allocate the vector for the preconditioner, and copy it over.
-	vector = ArrayUtils<double>::onetensor(getN()+1);
+	vector = ArrayUtils<double>::twotensor(getN()+1,2);
+	intermediate = ArrayUtils<double>::onetensor(getN()+1);
+
 	int lupe;
 	for(lupe=getN();lupe>=0;--lupe)
-		vector[lupe] = oldCopy.getValue(lupe);
+		{
+			vector[lupe][0] = oldCopy.getValue(lupe,0);
+			vector[lupe][1] = oldCopy.getValue(lupe,1);
+		}
 }
 
 /** ************************************************************************
@@ -106,6 +123,8 @@ Preconditioner::Preconditioner(const Preconditioner& oldCopy)
  *  ************************************************************************ */
 Preconditioner::~Preconditioner()
 {
+	ArrayUtils<double>::deltwotensor(vector);
+	ArrayUtils<double>::delonetensor(intermediate);
 }
 
 /** ************************************************************************
@@ -123,11 +142,27 @@ Preconditioner::~Preconditioner()
 Solution Preconditioner::solve(const Solution &current)
 {
 	Solution multiplied(current);
-	/*
+
+	// Perform the forward solve to invert the first part of the
+	// Cholesky decomposition.
 	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		multiplied(lupe) *= vector[lupe];
-	*/
+	intermediate[0] = current.getEntry(0)/vector[0][0];
+	for(lupe=1;lupe<=getN();++lupe)
+		intermediate[lupe] = 
+			(current.getEntry(lupe)-vector[lupe][1]*intermediate[lupe-1])
+			/vector[lupe][0];
+
+	// Perform the backwards solve for the Cholesky decomposition.
+	multiplied(getN()) = intermediate[getN()]/vector[getN()][0];
+	for(lupe=getN()-1;lupe>=0;--lupe)
+		multiplied(lupe) = (intermediate[lupe]-multiplied(lupe+1)*vector[lupe+1][1])
+			/vector[lupe][0];
+
+	// The previous solves wiped out the boundary conditions. Restore
+	// the left and right boundaru condition before sending the result
+	// back.
+	multiplied(0) = current.getEntry(0);
+	multiplied(getN()) = current.getEntry(getN());
 	return(multiplied);
 }
 

@@ -111,11 +111,12 @@ void Update
  * @return The number of iterations required. Returns zero if it did 
  *         not converge.
  ************************************************************************ */
-template<class Operation,class Approximation,class Double>
+template<class Operation,class Approximation,class Preconditioner,class Double>
 int GMRES
 (Operation* linearization, //!< Performs the linearization of the PDE on the approximation.
  Approximation* solution,  //!< The approximation to the linear system. (and initial estimate!)
  Approximation* rhs,       //!< the right hand side of the equation to solve.
+ Preconditioner* precond,  //!< The preconditioner used for the linear system.
  int krylovDimension,      //!< The number of vectors to generate in the Krylov subspace.
  int numberRestarts,       //!< Number of times to repeat the GMRES iterations.
  Double  tolerance         //!< How small the residual should be to terminate the GMRES iterations.
@@ -139,10 +140,13 @@ int GMRES
 	// Determine the residual and allocate the space for the Krylov
 	// subspace.
 	std::vector<Approximation> V(krylovDimension+1,
-															 Approximation(solution->getN()));
-	Approximation residual = (*rhs)-(*linearization)*(*solution);
+								 Approximation(solution->getN()));
+	Approximation residual = precond->solve((*rhs)-(*linearization)*(*solution));
 	Double rho             = residual.norm();
 	Double normRHS         = rhs->norm();
+
+	// variable for keeping track of how many restarts had to be used.
+	int totalRestarts = -1;
 
 	if(normRHS < 1.0E-5)
 		normRHS = 1.0;
@@ -151,6 +155,7 @@ int GMRES
 	int iteration = 1;
 	while( (--numberRestarts >= 0) && (rho > tolerance*normRHS))
 		{
+			totalRestarts += 1;
 
 			// The first vector in the Krylov subspace is the normalized
 			// residual.
@@ -168,7 +173,7 @@ int GMRES
 				{
 					// Get the next entry in the vectors that form the basis for
 					// the Krylov subspace.
-					V[iteration+1] = (*linearization)*V[iteration];
+					V[iteration+1] = precond->solve((*linearization)*V[iteration]);
 
 					// Perform the modified Gram-Schmidt method to orthogonalize
 					// the new vector.
@@ -247,6 +252,7 @@ int GMRES
 							ArrayUtils<double>::delonetensor(s);
 							//delete [] V;
 							//tolerance = rho/normRHS;
+							iteration += totalRestarts*krylovDimension;
 							return(iteration);
 						}
 
@@ -255,7 +261,7 @@ int GMRES
 			// We have exceeded the number of iterations. Update the
 			// approximation and start over.
 			Update(H,solution,s,&V,iteration-1);
-			residual = (*linearization)*(*solution) - (*rhs);
+			residual = precond->solve((*linearization)*(*solution) - (*rhs));
 			rho = residual.norm();
 		}
 
@@ -266,6 +272,7 @@ int GMRES
 	//delete [] V;
 	//tolerance = rho/normRHS;
 
+	iteration += totalRestarts*krylovDimension;
 	if(rho < tolerance*normRHS)
 		return(iteration);
 

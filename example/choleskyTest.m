@@ -7,7 +7,7 @@ for i=1:N,
 end
 
 for i=2:N,
- A(i,i-1) = sqrt((i-1)/i);
+ A(i,i-1) = -sqrt((i-1)/i);
 end
 
 
