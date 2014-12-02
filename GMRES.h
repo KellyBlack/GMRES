@@ -2,7 +2,7 @@
 /** *********************************************************************************
  * @file GMRES.h
  * @author Kelly Black <kjblack@gmail.com>
- * @version 0.1
+ * @version 0.2
  * @copyright BSD 2-Clause License
  *
  * @section LICENSE
@@ -55,6 +55,12 @@
  * Sparse Linear Systems  @cite sparseIterative
  *
  * @brief Template files for implementing a GMRES algorithm to solve a linear sytem.
+ *
+ * @mainpage Overview
+ *
+ * @latexonly
+ * \input{overview}
+ * @endlatexonly
  *
  * ********************************************************************************* */
 

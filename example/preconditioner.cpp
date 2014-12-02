@@ -4,7 +4,7 @@
  * @file preconditioner.cpp
  * @class Solution
  * @author Kelly Black <kjblack@gmail.com>
- * @version 0.1
+ * @version 0.2
  * @copyright BSD 2-Clause License
  *
  * @section LICENSE
