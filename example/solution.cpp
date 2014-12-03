@@ -425,7 +425,7 @@ void Solution::axpy(Solution* vector,
 					double multiplier)
 {
 	int lupe;
-	for(lupe=getN();lupe>0;--lupe)
+	for(lupe=getN();lupe>=0;--lupe)
 		{
 			setEntry(getEntry(lupe)+multiplier*vector->getEntry(lupe),lupe);
 		}
