@@ -145,6 +145,12 @@ Solution Preconditioner::solve(const Solution &current)
 	int row;
 	int N = current.getN();
 
+
+	int col;
+	for(row=0;row<=N;++row)
+		for(col=0;col<=N;++col)
+			multiplied(row,col) = current.getEntry(row,col);
+	/*
 	// Go through every y column and apply the preconditioner to that
 	// column.
 	for(row = N-1;row>0;--row)
@@ -179,6 +185,7 @@ Solution Preconditioner::solve(const Solution &current)
 			multiplied(0,col) = current.getEntry(0,col);
 			multiplied(N,col) = current.getEntry(N,col);
 		}
+	*/
 
 	return(multiplied);
 }

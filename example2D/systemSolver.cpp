@@ -50,22 +50,22 @@ int main(int argc,char **argv)
 		new Preconditioner(NUMBER);      // The preconditioner for the system.
 
 	int restart = 10;                    // Number of restarts to allow
-	int maxIt = 41;                      // Dimension of the Krylov subspace
-	double tol = 1.0E-8;                 // How close to make the approximation.
+	int maxIt   = 1000;                  // Dimension of the Krylov subspace
+	double tol  = 1.0E-8;                // How close to make the approximation.
 
 	int row;
 	int col;
 	for(row=0;row<=NUMBER;++row)
 		{
-			for(col=0;col<=NUMBER;++col)
+			for(col=1;col<NUMBER;++col)
 				{
 					// initialize the r.h.s to be something we know the
 					// solution for. Also, set the initial approximation if
 					// wanted.
 					double xgrid = elliptical->getX(row);
 					double ygrid = elliptical->getX(col);
-					(*b)(row,col) = (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid);
-					(*x)(row,col) = 0.0;
+					(*b)(row,col) = -2.0*(1.0-xgrid*xgrid)-2.0*(1.0-ygrid*ygrid);
+					//(*x)(row,col) = 0.0;
 				}
 
 			// Set the top and bottom boundary conditions. (This is
@@ -85,7 +85,7 @@ int main(int argc,char **argv)
 	// Find an approximation to the system!
 	int result= GMRES(elliptical,x,b,pre,maxIt,restart,tol);
 
-	std::cout << "Iterations: " << result << " residual: " << tol << std::endl;
+	std::cerr << "Iterations: " << result << " residual: " << tol << std::endl;
 #define SOLUTION
 #ifdef SOLUTION
 //std::cout << "x,approx,true," << result << std::endl;
@@ -96,8 +96,8 @@ int main(int argc,char **argv)
 			double ygrid = elliptical->getX(col);
 			std::cout << xgrid << "," << ygrid << "," 
 					  << (*x)(row,col) << "," 
-					  << (xgrid*xgrid*0.5 - xgrid*xgrid*xgrid*xgrid/12.0 - 5.0/12) + 
-				         (ygrid*ygrid*0.5 - ygrid*ygrid*ygrid*ygrid/12.0 - 5.0/12)
+					  << (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid) << "," 
+					  << (*b)(row,col) 
 					  << std::endl;
 		}
 #endif

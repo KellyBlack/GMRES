@@ -131,11 +131,11 @@ Solution Solution::operator=(const Solution& vector)
 {
 	int row;
 	int col;
-
+	int N = getN();
 	if(this != &vector)
 		{
-			for(row=getN();row>=0;--row)
-				for(col=getN();col>=0;--col)
+			for(row=N;row>=0;--row)
+				for(col=N;col>=0;--col)
 					{
 						this->setEntry(vector.getEntry(row,col),row,col);
 					}
@@ -157,8 +157,9 @@ Solution Solution::operator=(const double& value)
 {
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	int N = getN();
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				this->setEntry(value,row,col);
 			}
@@ -177,11 +178,13 @@ Solution Solution::operator=(const double& value)
  * ************************************************************************ */
 Solution Solution::operator+(const Solution& vector)
 {
-	Solution result(this->getN());
+	int N = vector.getN();
+	Solution result(N);
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				result.setEntry(this->getEntry(row,col)+vector.getEntry(row,col),row,col);
 			}
@@ -201,11 +204,12 @@ Solution Solution::operator+(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator-(const Solution& vector)
 {
-	Solution result(this->getN());
+	int N = vector.getN();
+	Solution result(N);
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				result.setEntry(this->getEntry(row,col)-vector.getEntry(row,col),row,col);
 			}
@@ -226,11 +230,12 @@ Solution Solution::operator-(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator*(const double& value)
 {
-	Solution result(this->getN());
+	int N = getN();
+	Solution result(N);
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				result.setEntry(this->getEntry(row,col)*value,row,col);
 			}
@@ -250,11 +255,12 @@ Solution Solution::operator*(const double& value)
  * ************************************************************************ */
 double Solution::operator*(const Solution& vector)
 {
+	int N = vector.getN();
 	double dot = 0.0;
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				dot += getEntry(row,col)*vector.getEntry(row,col);
 			}
@@ -273,10 +279,11 @@ double Solution::operator*(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator*=(const double& value)
 {
+	int N = getN();
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				this->setEntry(this->getEntry(row,col)*value,row,col);
 			}
@@ -295,10 +302,11 @@ Solution Solution::operator*=(const double& value)
  * ************************************************************************ */
 Solution Solution::operator-=(const Solution& vector)
 {
+	int N = vector.getN();
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				this->setEntry(this->getEntry(row,col)-vector.getEntry(row,col),row,col);
 			}
@@ -317,10 +325,11 @@ Solution Solution::operator-=(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator+=(const Solution& vector)
 {
+	int N = vector.getN();
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				this->setEntry(this->getEntry(row,col)+vector.getEntry(row,col),row,col);
 			}
@@ -356,13 +365,13 @@ Solution operator*(const double &value,class Solution vector)
  * ************************************************************************ */
 double Solution::dot(const Solution& v1,const Solution& v2)
 {
-
+	int N = v1.getN();
 	double dotProduct = 0.0;
 	int row;
 	int col;
 	//std::cout << "dot product" << std::endl;
-	for(row=v1.getN();row>=0;--row)
-		for(col=v1.getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				dotProduct += v1.getEntry(row,col)*v2.getEntry(row,col);
 			}
@@ -383,10 +392,11 @@ double Solution::dot(Solution* v1,Solution* v2)
 {
 
 	double dotProduct = 0.0;
+	int N = v1->getN();
 	int row;
 	int col;
-	for(row=v1->getN();row>=0;--row)
-		for(col=v1->getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				dotProduct += v1->getEntry(row,col)*v2->getEntry(row,col);
 			}
@@ -404,11 +414,12 @@ double Solution::dot(Solution* v1,Solution* v2)
  * ************************************************************************ */
 double Solution::norm(const Solution& v1)
 {
+	int N = v1.getN();
 	double norm = 0.0;
 	int row;
 	int col;
-	for(row=v1.getN();row>=0;--row)
-		for(col=v1.getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				norm += v1.getEntry(row,col)*v1.getEntry(row,col);
 			}
@@ -425,11 +436,12 @@ double Solution::norm(const Solution& v1)
  * ************************************************************************ */
 double Solution::norm()
 {
+	int N = getN();
 	double norm = 0.0;
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				norm += getEntry(row,col)*getEntry(row,col);
 			}
@@ -449,10 +461,11 @@ double Solution::norm()
 void Solution::axpy(Solution* vector,
 					double multiplier)
 {
+	int N = vector->getN();
 	int row;
 	int col;
-	for(row=getN();row>=0;--row)
-		for(col=getN();col>=0;--col)
+	for(row=N;row>=0;--row)
+		for(col=N;col>=0;--col)
 			{
 				setEntry(getEntry(row,col)+multiplier*vector->getEntry(row,col),
 						 row,col);
