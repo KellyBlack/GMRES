@@ -64,7 +64,7 @@ public:
 	~Solution();                             //< Destructor for the class
 
 	// Now define the operators associated with the class.
-	double& operator()(int row);                   //< The parenthesis operator for access to data elements
+	double& operator()(int row,int col);           //< The parenthesis operator for access to data elements
 	Solution operator=(const Solution& vector);    //< Assignment operator for copying another Solution
 	Solution operator=(const double& value);       //< Assignment operator for assigning a single value to all elements.
 	Solution operator+(const Solution& vector);    //< Operator for adding two Solution objects
@@ -96,9 +96,9 @@ public:
 	 * @param row The entry in the vector to change.
 	 * @return N/A
 	 * ************************************************************************ */
-	void setEntry(double value,int row)
+	void setEntry(double value,int row,int col)
 	{
-		solution[row] = value;
+		solution[row][col] = value;
 	}
 
 
@@ -130,9 +130,9 @@ public:
 	   @param row The grid point where you want the height of the function.
 	   @return The approximation at the given grid point.
 	*/
-	inline double getEntry(int row) const
+	inline double getEntry(int row,int col) const
 	{
-		return(solution[row]);
+		return(solution[row][col]);
 	}
 
 protected:
@@ -144,7 +144,7 @@ private:
 	// Define the size of the vector and the vector that will contain
 	// the information.
 	int N;                      //< The number of grid points.
-	double *solution = NULL;    //< The vector that contains the approximation.
+	double **solution = NULL;   //< The vector that contains the approximation.
 
 };
 

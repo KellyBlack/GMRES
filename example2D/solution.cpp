@@ -70,8 +70,8 @@ Solution::Solution(int size)
 	// Set the size of the vector, allocate the space, and zero out the
 	// approximation.
 	setN(size);
-	solution = ArrayUtils<double>::onetensor(size+1);  // allocate the space. 
-	// Note that the onetensor routine sets everything to zero so it
+	solution = ArrayUtils<double>::twotensor(size+1,size+1);  // allocate the space. 
+	// Note that the twotensor routine sets everything to zero so it
 	// does not have to be initialized.
 }
 
@@ -88,9 +88,10 @@ Solution::Solution(const Solution& oldCopy)
 	// copy the values over.
 	int size = oldCopy.getN();
 	setN(size);
-	solution = ArrayUtils<double>::onetensor(size+1);
+	solution = ArrayUtils<double>::twotensor(size+1,size+1);
 	for(;size>=0;--size)
-		setEntry(oldCopy.getEntry(size),size);
+		for(int col=getN();col>=0;--col)
+			setEntry(oldCopy.getEntry(size,col),size,col);
 }
 
 /** ************************************************************************
@@ -100,7 +101,7 @@ Solution::~Solution()
 {
 	// delete the approximation.
 	if(solution)
-		ArrayUtils<double>::delonetensor(solution);
+		ArrayUtils<double>::deltwotensor(solution);
 	solution = NULL;
 }
 
@@ -112,9 +113,9 @@ Solution::~Solution()
  * @param row The row number to use.
  * @return a double precision value, solution[row]
  * ************************************************************************ */
-double& Solution::operator()(int row)
+double& Solution::operator()(int row,int col)
 {
-	return(solution[row]);
+	return(solution[row][col]);
 }
 
 /** ************************************************************************
@@ -128,14 +129,16 @@ double& Solution::operator()(int row)
  * ************************************************************************ */
 Solution Solution::operator=(const Solution& vector)
 {
-	int lupe;
+	int row;
+	int col;
 
 	if(this != &vector)
 		{
-			for(lupe=getN();lupe>=0;--lupe)
-				{
-					this->setEntry(vector.getEntry(lupe),lupe);
-				}
+			for(row=getN();row>=0;--row)
+				for(col=getN();col>=0;--col)
+					{
+						this->setEntry(vector.getEntry(row,col),row,col);
+					}
 		}
 	return(*this);
 }
@@ -152,12 +155,13 @@ Solution Solution::operator=(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator=(const double& value)
 {
-	int lupe;
-
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			this->setEntry(value,lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				this->setEntry(value,row,col);
+			}
 
 	return(*this);
 }
@@ -174,11 +178,13 @@ Solution Solution::operator=(const double& value)
 Solution Solution::operator+(const Solution& vector)
 {
 	Solution result(this->getN());
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			result.setEntry(this->getEntry(lupe)+vector.getEntry(lupe),lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				result.setEntry(this->getEntry(row,col)+vector.getEntry(row,col),row,col);
+			}
 
 	return(result);
 
@@ -196,11 +202,13 @@ Solution Solution::operator+(const Solution& vector)
 Solution Solution::operator-(const Solution& vector)
 {
 	Solution result(this->getN());
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			result.setEntry(this->getEntry(lupe)-vector.getEntry(lupe),lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				result.setEntry(this->getEntry(row,col)-vector.getEntry(row,col),row,col);
+			}
 
 	return(result);
 
@@ -219,11 +227,13 @@ Solution Solution::operator-(const Solution& vector)
 Solution Solution::operator*(const double& value)
 {
 	Solution result(this->getN());
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			result.setEntry(this->getEntry(lupe)*value,lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				result.setEntry(this->getEntry(row,col)*value,row,col);
+			}
 
 	return(result);
 }
@@ -240,12 +250,14 @@ Solution Solution::operator*(const double& value)
  * ************************************************************************ */
 double Solution::operator*(const Solution& vector)
 {
-	double dot = getEntry(0)*vector.getEntry(0);
-	int lupe;
-	for(lupe=getN();lupe>0;--lupe)
-		{
-			dot += getEntry(lupe)*vector.getEntry(lupe);
-		}
+	double dot = 0.0;
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				dot += getEntry(row,col)*vector.getEntry(row,col);
+			}
 	return(dot);
 }
 
@@ -261,11 +273,13 @@ double Solution::operator*(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator*=(const double& value)
 {
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			this->setEntry(this->getEntry(lupe)*value,lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				this->setEntry(this->getEntry(row,col)*value,row,col);
+			}
 
 	return(*this);
 }
@@ -281,11 +295,13 @@ Solution Solution::operator*=(const double& value)
  * ************************************************************************ */
 Solution Solution::operator-=(const Solution& vector)
 {
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			this->setEntry(this->getEntry(lupe)-vector.getEntry(lupe),lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				this->setEntry(this->getEntry(row,col)-vector.getEntry(row,col),row,col);
+			}
 
 	return(*this);
 }
@@ -301,11 +317,13 @@ Solution Solution::operator-=(const Solution& vector)
  * ************************************************************************ */
 Solution Solution::operator+=(const Solution& vector)
 {
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			this->setEntry(this->getEntry(lupe)+vector.getEntry(lupe),lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				this->setEntry(this->getEntry(row,col)+vector.getEntry(row,col),row,col);
+			}
 
 	return(*this);
 }
@@ -339,14 +357,15 @@ Solution operator*(const double &value,class Solution vector)
 double Solution::dot(const Solution& v1,const Solution& v2)
 {
 
-	double dotProduct = v1.getEntry(0)*v2.getEntry(0);
-	int lupe;
+	double dotProduct = 0.0;
+	int row;
+	int col;
 	//std::cout << "dot product" << std::endl;
-	for(lupe=v1.getN();lupe>0;--lupe)
-		{
-			dotProduct += v1.getEntry(lupe)*v2.getEntry(lupe);
-			//std::cout << dotProduct << "," << v1.getEntry(lupe) << "," << v2.getEntry(lupe) <<std::endl;
-		}
+	for(row=v1.getN();row>=0;--row)
+		for(col=v1.getN();col>=0;--col)
+			{
+				dotProduct += v1.getEntry(row,col)*v2.getEntry(row,col);
+			}
 	return(dotProduct);
 }
 
@@ -363,12 +382,14 @@ double Solution::dot(const Solution& v1,const Solution& v2)
 double Solution::dot(Solution* v1,Solution* v2)
 {
 
-	double dotProduct = v1->getEntry(0)*v2->getEntry(0);
-	int lupe;
-	for(lupe=v1->getN();lupe>0;--lupe)
-		{
-			dotProduct += v1->getEntry(lupe)*v2->getEntry(lupe);
-		}
+	double dotProduct = 0.0;
+	int row;
+	int col;
+	for(row=v1->getN();row>=0;--row)
+		for(col=v1->getN();col>=0;--col)
+			{
+				dotProduct += v1->getEntry(row,col)*v2->getEntry(row,col);
+			}
 	return(dotProduct);
 }
 
@@ -383,12 +404,14 @@ double Solution::dot(Solution* v1,Solution* v2)
  * ************************************************************************ */
 double Solution::norm(const Solution& v1)
 {
-	double norm = v1.getEntry(0)*v1.getEntry(0);
-	int lupe;
-	for(lupe=v1.getN();lupe>0;--lupe)
-		{
-			norm += v1.getEntry(lupe)*v1.getEntry(lupe);
-		}
+	double norm = 0.0;
+	int row;
+	int col;
+	for(row=v1.getN();row>=0;--row)
+		for(col=v1.getN();col>=0;--col)
+			{
+				norm += v1.getEntry(row,col)*v1.getEntry(row,col);
+			}
 	return(sqrt(norm));
 }
 
@@ -402,12 +425,14 @@ double Solution::norm(const Solution& v1)
  * ************************************************************************ */
 double Solution::norm()
 {
-	double norm = getEntry(0)*getEntry(0);
-	int lupe;
-	for(lupe=getN();lupe>0;--lupe)
-		{
-			norm += getEntry(lupe)*getEntry(lupe);
-		}
+	double norm = 0.0;
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				norm += getEntry(row,col)*getEntry(row,col);
+			}
 	return(sqrt(norm));
 }
 
@@ -424,9 +449,12 @@ double Solution::norm()
 void Solution::axpy(Solution* vector,
 					double multiplier)
 {
-	int lupe;
-	for(lupe=getN();lupe>=0;--lupe)
-		{
-			setEntry(getEntry(lupe)+multiplier*vector->getEntry(lupe),lupe);
-		}
+	int row;
+	int col;
+	for(row=getN();row>=0;--row)
+		for(col=getN();col>=0;--col)
+			{
+				setEntry(getEntry(row,col)+multiplier*vector->getEntry(row,col),
+						 row,col);
+			}
 }
