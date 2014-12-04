@@ -53,21 +53,34 @@ int main(int argc,char **argv)
 	int maxIt = 41;                      // Dimension of the Krylov subspace
 	double tol = 1.0E-8;                 // How close to make the approximation.
 
-	int lupe;
-	for(lupe=0;lupe<=NUMBER;++lupe)
+	int row;
+	int col;
+	for(row=0;row<=NUMBER;++row)
 		{
-			// initialize the r.h.s to be something we know the
-			// solution for. Also, set the initial approximation if
-			// wanted.
-			double xgrid = elliptical->getX(lupe);
-			//b(lupe) = -81.0*M_PI*M_PI*sin(9.0*M_PI*xgrid);
-			(*b)(lupe) = 90.0*pow(xgrid,8.0)-2.0;
-			(*x)(lupe) = 0.0; //pow(xgrid,10.0)/90.0 - xgrid*xgrid/91;
+			for(col=0;col<=NUMBER;++col)
+				{
+					// initialize the r.h.s to be something we know the
+					// solution for. Also, set the initial approximation if
+					// wanted.
+					double xgrid = elliptical->getX(row);
+					double ygrid = elliptical->getX(col);
+					(*b)(row,col) = (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid);
+					(*x)(row,col) = 0.0;
+				}
+
+			// Set the top and bottom boundary conditions. (This is
+			// redundant but may need to be changed for different
+			// forcing functions above.
+			(*b)(row,0)      = 0.0;
+			(*b)(row,NUMBER) = 0.0;
 		}
 
-	// Set the boundary conditions separately.
-	(*b)(0) = 0.0;
-	(*b)(NUMBER) = -0.0;
+	// Set the left and right boundary conditions separately.
+	for(col=0;col<=NUMBER;++col)
+		{
+			(*b)(0,col)      = 0.0;
+			(*b)(NUMBER,col) = 0.0;
+		}
 
 	// Find an approximation to the system!
 	int result= GMRES(elliptical,x,b,pre,maxIt,restart,tol);
@@ -76,36 +89,19 @@ int main(int argc,char **argv)
 #define SOLUTION
 #ifdef SOLUTION
 //std::cout << "x,approx,true," << result << std::endl;
-	for(lupe=0;lupe<=NUMBER;++lupe)
+	for(row=0;row<=NUMBER;++row)
+		for(col=0;col<=NUMBER;++col)
 		{
-			//if(lupe%5 == 0)
-			//	std::cout << std::endl;
-			double xgrid = elliptical->getX(lupe);
-			std::cout << xgrid << "," 
-					  << (*x)(lupe) << "," 
-				//<< 56.0*pow(xgrid,6.0)-2.0
-								<< (pow(xgrid,10.0)-xgrid*xgrid)
-				//<< sin(9.0*M_PI*xgrid) 
-								<< std::endl;
+			double xgrid = elliptical->getX(row);
+			double ygrid = elliptical->getX(col);
+			std::cout << xgrid << "," << ygrid << "," 
+					  << (*x)(row,col) << "," 
+					  << (xgrid*xgrid*0.5 - xgrid*xgrid*xgrid*xgrid/12.0 - 5.0/12) + 
+				         (ygrid*ygrid*0.5 - ygrid*ygrid*ygrid*ygrid/12.0 - 5.0/12)
+					  << std::endl;
 		}
 #endif
 
-	/*
-	for(lupe=0;lupe<=NUMBER;++lupe)
-		{
-			double xgrid = elliptical.getX(lupe);
-			b(lupe) = pow(xgrid,60.0);
-		}
-	y = elliptical*b;
-	for(lupe=0;lupe<=NUMBER;++lupe)
-		{
-			if(lupe%5 == 0)
-				std::cout << std::endl;
-			double xgrid = elliptical.getX(lupe);
-			std::cout << fabs(y(lupe)-60.0*59.0*pow(xgrid,58.0)) << "  ";
-		}
-	std::cout << std::endl;
-	*/
 
 	return(1);
 }

@@ -135,7 +135,7 @@ Solution Poisson::operator*(class Solution vector)
 	// Dirichlet.
 	for(row=0;row<=N;++row)
 		{
-			result.setEntry(vector(row,0),row,0); // set the right boundary
+			result.setEntry(vector(row,0),row,0); // set the top boundary
 
 			for(col=1;col<N;++col)
 				// Go through every interior point. Calc. the
@@ -154,14 +154,14 @@ Solution Poisson::operator*(class Solution vector)
 					result.setEntry(tmp,row,col);
 				}
 
-			result.setEntry(vector(row,N),N,0); // set the left boundary.
+			result.setEntry(vector(row,N),N,0); // set the bottom boundary.
 		}
 
-	// Now set the top and bottom boundary conditions.
-	for(row=1;row<N;++row)
+	// Now set the left and right boundary conditions.
+	for(col=0;col<=N;++col)
 		{
-			result.setEntry(vector(row,0),row,0);
-			result.setEntry(vector(row,N),row,N);
+			result.setEntry(vector(0,col),0,col);
+			result.setEntry(vector(N,col),N,col);
 		}
 
 	return(result);
