@@ -66,7 +66,7 @@
  * ************************************************************************ */
 Poisson::Poisson(int number)
 {
-  N  = number;
+	N  = number;
 	d1 = ArrayUtils<double>::twotensor(number+1,number+1);
 	d2 = ArrayUtils<double>::twotensor(number+1,number+1);
 	x  = ArrayUtils<double>::onetensor(number+1);
@@ -82,7 +82,7 @@ Poisson::Poisson(int number)
  * ************************************************************************ */
 Poisson::Poisson(const Poisson& oldCopy)
 {
-  N  = oldCopy.getN();
+	N  = oldCopy.getN();
 	d1 = ArrayUtils<double>::twotensor(N+1,N+1);
 	d2 = ArrayUtils<double>::twotensor(N+1,N+1);
 	x  = ArrayUtils<double>::onetensor(N+1);
@@ -112,20 +112,6 @@ Poisson::~Poisson()
 
 
 /** ************************************************************************
- * The parenthesis operator for the Poisson class.
- * 
- * Returns the value of the coefficient for the linearized operator for the indicated row and column.
- *
- * @param row The row number to use.
- * @param column The column number to use.
- * @return a double precision value, L[row][column]
- * ************************************************************************ */
-double& Poisson::operator()(int row,int column)
-{
-	return(d2[row][column]);
-}
-
-/** ************************************************************************
  * The matrix/vector  multiplication operator for the Poisson class.
  * 
  * Returns a new Solution object which is the matrix/vector product of
@@ -138,21 +124,46 @@ double& Poisson::operator()(int row,int column)
 Solution Poisson::operator*(class Solution vector)
 {
 	double tmp;
-	int lupe;
+	int row;
+	int col;
+	int N = vector.getN();
 	int innerLupe;
 	Solution result;
 
-	// the first and last row just return the same values, so 
-	// there is no need to define the results from that row.
-	result.setEntry(vector(0),0);
-	for(lupe=1;lupe<getN();++lupe)
+	// Perform the Laplacian operator on the interior of the current
+	// approximation. Apply the boundary conditions as being
+	// Dirichlet.
+	for(row=0;row<=N;++row)
 		{
-			tmp = (*this)(lupe,0)*vector(0);
-			for(innerLupe=1;innerLupe<=getN();++innerLupe)
-				tmp += (*this)(lupe,innerLupe)*vector(innerLupe);
-			result.setEntry(tmp,lupe);
+			result.setEntry(vector(row,0),row,0); // set the right boundary
+
+			for(col=1;col<N;++col)
+				// Go through every interior point. Calc. the
+				// approx. to the x and then the y derivatives.
+				{
+					// First calc. the second x derivative.
+					tmp = this->getD2(row,0)*vector(0,col);
+					for(innerLupe=1;innerLupe<=N;++innerLupe)
+						tmp += this->getD2(row,innerLupe)*vector(innerLupe,col);
+
+					// Next calc. the second y derivative
+					for(innerLupe=0;innerLupe<=N;++innerLupe)
+						tmp += this->getD2(col,innerLupe)*vector(row,innerLupe);
+
+					// Set this value for the result.
+					result.setEntry(tmp,row,col);
+				}
+
+			result.setEntry(vector(row,N),N,0); // set the left boundary.
 		}
-	result.setEntry(vector(getN()),getN());
+
+	// Now set the top and bottom boundary conditions.
+	for(row=1;row<N;++row)
+		{
+			result.setEntry(vector(row,0),row,0);
+			result.setEntry(vector(row,N),row,N);
+		}
+
 	return(result);
 }
 

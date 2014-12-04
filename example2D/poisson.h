@@ -65,7 +65,6 @@ public:
 	~Poisson();                        //< Destructor for the Poisson Class.
 
 	// Basic algebraic operators associated with the linearization of the operator.
-	double& operator()(int row,int column);     //< The value of the linearization for the operator at a given row and column.
 	Solution operator*(class Solution vector);  //< The linearized operator acting on a given Solution.
 
 	
@@ -97,7 +96,7 @@ public:
 		 @param col The column number in the matrix.
 		 @return The value within the matrix at the given row and column.
 	 */
-	double getD1(int row,int col) const
+	inline double getD1(int row,int col) const
 	{
 		return(d1[row][col]);
 	}
@@ -110,7 +109,7 @@ public:
 		 @param col The column number in the matrix.
 		 @return The value within the matrix at the given row and column.
 	 */
-	double getD2(int row,int col) const
+	inline double getD2(int row,int col) const
 	{
 		return(d2[row][col]);
 	}
