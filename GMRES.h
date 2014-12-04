@@ -125,7 +125,7 @@ int GMRES
  Preconditioner* precond,  //!< The preconditioner used for the linear system.
  int krylovDimension,      //!< The number of vectors to generate in the Krylov subspace.
  int numberRestarts,       //!< Number of times to repeat the GMRES iterations.
- Double  tolerance         //!< How small the residual should be to terminate the GMRES iterations.
+ Double tolerance          //!< How small the residual should be to terminate the GMRES iterations.
  )
 {
 
@@ -258,8 +258,7 @@ int GMRES
 							ArrayUtils<double>::delonetensor(s);
 							//delete [] V;
 							//tolerance = rho/normRHS;
-							iteration += totalRestarts*krylovDimension;
-							return(iteration);
+							return(iteration+totalRestarts*krylovDimension);
 						}
 
 				}
@@ -278,9 +277,8 @@ int GMRES
 	//delete [] V;
 	//tolerance = rho/normRHS;
 
-	iteration += totalRestarts*krylovDimension;
 	if(rho < tolerance*normRHS)
-		return(iteration);
+		return(iteration+totalRestarts*krylovDimension);
 
 	return(0);
 }
