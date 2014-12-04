@@ -142,27 +142,44 @@ Preconditioner::~Preconditioner()
 Solution Preconditioner::solve(const Solution &current)
 {
 	Solution multiplied(current);
+	int row;
+	int N = current.getN();
 
-	// Perform the forward solve to invert the first part of the
-	// Cholesky decomposition.
-	int lupe;
-	intermediate[0] = current.getEntry(0)/vector[0][0];
-	for(lupe=1;lupe<=getN();++lupe)
-		intermediate[lupe] = 
-			(current.getEntry(lupe)-vector[lupe][1]*intermediate[lupe-1])
-			/vector[lupe][0];
+	// Go through every y column and apply the preconditioner to that
+	// column.
+	for(row = N-1;row>0;--row)
+		{
 
-	// Perform the backwards solve for the Cholesky decomposition.
-	multiplied(getN()) = intermediate[getN()]/vector[getN()][0];
-	for(lupe=getN()-1;lupe>=0;--lupe)
-		multiplied(lupe) = (intermediate[lupe]-multiplied(lupe+1)*vector[lupe+1][1])
-			/vector[lupe][0];
+			// Perform the forward solve to invert the first part of the
+			// Cholesky decomposition.
+			int lupe;
+			intermediate[0] = current.getEntry(row,0)/vector[0][0];
+			for(lupe=1;lupe<=N;++lupe)
+				intermediate[lupe] = 
+					(current.getEntry(row,lupe)-vector[lupe][1]*intermediate[lupe-1])
+					/vector[lupe][0];
 
-	// The previous solves wiped out the boundary conditions. Restore
-	// the left and right boundaru condition before sending the result
-	// back.
-	multiplied(0) = current.getEntry(0);
-	multiplied(getN()) = current.getEntry(getN());
+			// Perform the backwards solve for the Cholesky decomposition.
+			multiplied(row,N) = intermediate[N]/vector[N][0];
+			for(lupe=N-1;lupe>=0;--lupe)
+				multiplied(row,lupe) = (intermediate[lupe]-multiplied(row,lupe+1)*vector[lupe+1][1])
+					/vector[lupe][0];
+
+			// The previous solves wiped out the boundary conditions. Restore
+			// the left and right boundaru condition before sending the result
+			// back.
+			multiplied(row,0) = current.getEntry(row,0);
+			multiplied(row,N) = current.getEntry(row,N);
+
+		}
+
+	// Apply the Dirichlet boundary conditions on the top and bottom rows.
+	for(int col=0;col<=N;++col)
+		{
+			multiplied(0,col) = current.getEntry(0,col);
+			multiplied(N,col) = current.getEntry(N,col);
+		}
+
 	return(multiplied);
 }
 
