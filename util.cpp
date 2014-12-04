@@ -306,10 +306,10 @@ void ArrayUtils<number>::delfivetensor(number *****u) {
     if(u==NULL)
 	return;
 
-    delete u[0][0][0][0];
-    delete u[0][0][0];
-    delete u[0][0];
-    delete u[0];
+    delete [] u[0][0][0][0];
+    delete [] u[0][0][0];
+    delete [] u[0][0];
+    delete [] u[0];
     delete [] u;
 
 }
@@ -327,9 +327,9 @@ void ArrayUtils<number>::delfourtensor(number ****u) {
     if(u==NULL)
 	return;
 
-    delete u[0][0][0];
-    delete u[0][0];
-    delete u[0];
+    delete [] u[0][0][0];
+    delete [] u[0][0];
+    delete [] u[0];
     delete [] u;
 
 }
@@ -348,8 +348,8 @@ void ArrayUtils<number>::delthreetensor(number ***u) {
     if(u==NULL)
 	return;
 
-  delete u[0][0];
-  delete u[0];
+  delete [] u[0][0];
+  delete [] u[0];
   delete [] u;
 
 }
@@ -369,7 +369,7 @@ void ArrayUtils<number>::deltwotensor(number **u){
     if(u==NULL)
 	return;
 
-  delete u[0];
+  delete [] u[0];
   delete [] u;
 
 
