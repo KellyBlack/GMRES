@@ -92,7 +92,7 @@ Preconditioner::Preconditioner(int number)
 			//r = (r*(2+m)-1)/r;
 			tmp = sin(M_PI*((double)lupe)/xnum);
 			tmp *= tmp;
-			cholesky[lupe][0] = -(3.0*tmp*tmp)/((xnum*xnum-1.0)*tmp+3.0);
+			cholesky[lupe][0] = -(3.0*tmp*tmp)/((xnum*xnum-1.0)*tmp+3.0)*0.5;
 
 		}
 

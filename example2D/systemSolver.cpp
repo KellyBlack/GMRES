@@ -50,7 +50,7 @@ int main(int argc,char **argv)
 		new Preconditioner(NUMBER);      // The preconditioner for the system.
 
 	int restart = 10;                    // Number of restarts to allow
-	int maxIt   = 800;                   // Dimension of the Krylov subspace
+	int maxIt   = 500;                   // Dimension of the Krylov subspace
 	double tol  = 1.0E-8;                // How close to make the approximation.
 
 	int row;
