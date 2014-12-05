@@ -152,7 +152,7 @@ int GMRES
 	Double normRHS         = rhs->norm();
 
 	// variable for keeping track of how many restarts had to be used.
-	int totalRestarts = -1;
+	int totalRestarts = 0;
 
 	if(normRHS < 1.0E-5)
 		normRHS = 1.0;
@@ -161,7 +161,6 @@ int GMRES
 	int iteration = 1;
 	while( (--numberRestarts >= 0) && (rho > tolerance*normRHS))
 		{
-			totalRestarts += 1;
 
 			// The first vector in the Krylov subspace is the normalized
 			// residual.
@@ -261,14 +260,16 @@ int GMRES
 							return(iteration+totalRestarts*krylovDimension);
 						}
 
-				}
+				} // for(iteration)
 
 			// We have exceeded the number of iterations. Update the
 			// approximation and start over.
+			totalRestarts += 1;
 			Update(H,solution,s,&V,iteration-1);
 			residual = precond->solve((*linearization)*(*solution) - (*rhs));
 			rho = residual.norm();
-		}
+
+		} // while(numberRestarts,rho)
 
 
 	ArrayUtils<double>::deltwotensor(givens);
