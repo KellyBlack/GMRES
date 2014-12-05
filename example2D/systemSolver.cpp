@@ -36,6 +36,7 @@
 #include "../GMRES.h"
 
 #include <iostream>
+#include <fstream>
 #include <cmath>
 
 #define DERIVPOWER 50.0
@@ -88,18 +89,21 @@ int main(int argc,char **argv)
 	std::cerr << "Iterations: " << result << " residual: " << tol << std::endl;
 #define SOLUTION
 #ifdef SOLUTION
+	std::ofstream csvFile;
+	csvFile.open ("testing.csv");
 //std::cout << "x,approx,true," << result << std::endl;
 	for(row=0;row<=NUMBER;++row)
 		for(col=0;col<=NUMBER;++col)
 		{
 			double xgrid = elliptical->getX(row);
 			double ygrid = elliptical->getX(col);
-			std::cout << xgrid << "," << ygrid << "," 
-					  << (*x)(row,col) << "," 
-					  << (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid) << "," 
-					  << (*b)(row,col) 
-					  << std::endl;
+			csvFile << xgrid << "," << ygrid << ","
+					<< (*x)(row,col) << ","
+					<< (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid) << ","
+					<< (*b)(row,col)
+					<< std::endl;
 		}
+	csvFile.close();
 #endif
 
 
