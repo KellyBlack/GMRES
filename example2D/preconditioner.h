@@ -96,9 +96,9 @@ public:
 		 @param row Row in the vector you want to access.
 		 @return The value of the vector for the given row.
 	 */
-	double getValue(int row,int col) const
+	double getValue(int row) const
 	{
-		return(cholesky[row][col]);
+		return(diagonal[row]);
 	}
 
 
@@ -107,10 +107,8 @@ protected:
 
 private:
 
-	int N;                //< The number of grid points associated with the approximation.
-	double **cholesky;    //< The vector that has the reciprocol of the diagonal entries of the operator.
-	double *intermediate; //< Vector used for the intermediate results
-						  //in the backwards solve for inverting the preconditioner.
+	int N;              //< The number of grid points associated with the approximation.
+	double *diagonal;   //< The vector that has the reciprocol of the diagonal entries of the operator.
 
 };
 

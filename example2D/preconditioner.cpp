@@ -67,20 +67,11 @@
 Preconditioner::Preconditioner(int number)
 {
 	setN(number);
-	// allocate the vector with the lower diagonal matrix entries for
-	// the Cholesky decomposition of the second order finite
-	// difference operator for the same equation.
-	cholesky = ArrayUtils<double>::twotensor(number+1,2);
+	// allocate the vector with the diagonal entries of the Laplacian
+	diagonal = ArrayUtils<double>::onetensor(number+1);
 
-	// Allocate the vector required to keep the intermediate results
-	// of the solver when doing the backwards and forward solve from
-	// the Cholesky decomposition.
-	intermediate = ArrayUtils<double>::onetensor(number+1);
-
-	// Define the values for the Cholesky decomposition of the finite
-	// difference operator. This is the Cholesky decomposition of the
-	// second order finite difference approximation of a Helmholtz
-	// operator, d^2/dx^2 u + m*u.
+	// Define the values for the diagonal entries of the operator,
+	// d^2/dx^2 u + m*u.
 	int lupe;
 	double m = 0.0;
 	double r = 2.0 + m;
@@ -88,18 +79,11 @@ Preconditioner::Preconditioner(int number)
 	double tmp;
 	for(lupe=0;lupe<=number;++lupe)
 		{
-			//cholesky[lupe][0] = sqrt(r);
-			//r = (r*(2+m)-1)/r;
 			tmp = sin(M_PI*((double)lupe)/xnum);
 			tmp *= tmp;
-			cholesky[lupe][0] = -(3.0*tmp*tmp)/((xnum*xnum-1.0)*tmp+3.0)*0.5;
-
+			diagonal[lupe] = -(3.0*tmp*tmp)/((xnum*xnum-1.0)*tmp+3.0)*0.5;
 		}
 
-	for(lupe=1;lupe<=number;++lupe)
-		{
-			cholesky[lupe][1] = -1.0/cholesky[lupe-1][0];
-		}
 
 }
 
@@ -113,14 +97,12 @@ Preconditioner::Preconditioner(const Preconditioner& oldCopy)
 {
 	setN(oldCopy.getN());
 	// Allocate the vector for the preconditioner, and copy it over.
-	cholesky = ArrayUtils<double>::twotensor(getN()+1,2);
-	intermediate = ArrayUtils<double>::onetensor(getN()+1);
+	diagonal = ArrayUtils<double>::onetensor(getN()+1);
 
 	int lupe;
 	for(lupe=getN();lupe>=0;--lupe)
 		{
-			cholesky[lupe][0] = oldCopy.getValue(lupe,0);
-			cholesky[lupe][1] = oldCopy.getValue(lupe,1);
+			diagonal[lupe] = oldCopy.getValue(lupe);
 		}
 }
 
@@ -129,8 +111,7 @@ Preconditioner::Preconditioner(const Preconditioner& oldCopy)
  *  ************************************************************************ */
 Preconditioner::~Preconditioner()
 {
-	ArrayUtils<double>::deltwotensor(cholesky);
-	ArrayUtils<double>::delonetensor(intermediate);
+	ArrayUtils<double>::delonetensor(diagonal);
 }
 
 /** ************************************************************************
@@ -157,7 +138,7 @@ Solution Preconditioner::solve(const Solution &current)
 
 	for(row=1;row<N;++row)
 		for(col=1;col<N;++col)
-			multiplied(row,col) = multiplied(row,col)*cholesky[row][0];
+			multiplied(row,col) = multiplied(row,col)*diagonal[row];
 
 	for(col=0;col<=N;++col)
 		{
@@ -170,78 +151,6 @@ Solution Preconditioner::solve(const Solution &current)
 			multiplied(row,0) = current.getEntry(row,0);
 			multiplied(row,N) = current.getEntry(row,N);
 		}
-
-
-	/*
-	// Go through every y column and apply the preconditioner to that
-	// column.
-	for(row = N-1;row>0;--row)
-		{
-
-			// Perform the forward solve to invert the first part of the
-			// Cholesky decomposition.
-			intermediate[0] = current.getEntry(row,0)/cholesky[0][0];
-			for(lupe=1;lupe<=N;++lupe)
-				intermediate[lupe] = 
-					(current.getEntry(row,lupe)-cholesky[lupe][1]*intermediate[lupe-1])
-					/cholesky[lupe][0];
-
-			// Perform the backwards solve for the Cholesky decomposition.
-			multiplied(row,N) = intermediate[N]/cholesky[N][0];
-			for(lupe=N-1;lupe>=0;--lupe)
-				multiplied(row,lupe) = (intermediate[lupe]-multiplied(row,lupe+1)*cholesky[lupe+1][1])
-					/cholesky[lupe][0];
-
-			// The previous solves wiped out the boundary conditions. Restore
-			// the left and right boundaru condition before sending the result
-			// back.
-			multiplied(row,0) = current.getEntry(row,0);
-			multiplied(row,N) = current.getEntry(row,N);
-
-		}
-
-	// Apply the Dirichlet boundary conditions on the top and bottom rows.
-	for(col=0;col<=N;++col)
-		{
-			multiplied(0,col) = current.getEntry(0,col);
-			multiplied(N,col) = current.getEntry(N,col);
-		}
-
-
-	for(col = N-1;col>0;--col)
-		{
-
-			// Perform the forward solve to invert the first part of the
-			// Cholesky decomposition.
-			intermediate[0] = current.getEntry(0,col)/cholesky[0][0];
-			for(lupe=1;lupe<=N;++lupe)
-				intermediate[lupe] = 
-					(current.getEntry(lupe,col)-cholesky[lupe][1]*intermediate[lupe-1])
-					/cholesky[lupe][0];
-
-			// Perform the backwards solve for the Cholesky decomposition.
-			multiplied(N,col) = intermediate[N]/cholesky[N][0];
-			for(lupe=N-1;lupe>=0;--lupe)
-				multiplied(lupe,col) = (intermediate[lupe]-multiplied(lupe+1,col)*cholesky[lupe+1][1])
-					/cholesky[lupe][0];
-
-			// The previous solves wiped out the boundary conditions. Restore
-			// the left and right boundaru condition before sending the result
-			// back.
-			multiplied(0,col) = current.getEntry(0,col);
-			multiplied(N,col) = current.getEntry(N,col);
-
-		}
-
-	// Apply the Dirichlet boundary conditions on the top and bottom rows.
-	for(row=0;row<=N;++row)
-		{
-			multiplied(row,0) = current.getEntry(row,0);
-			multiplied(row,N) = current.getEntry(row,N);
-		}
-
-	*/
-
 
 
 	return(multiplied);
