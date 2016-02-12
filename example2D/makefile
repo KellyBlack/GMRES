@@ -22,7 +22,7 @@ LINK =   -lm
 
 
 all:	systemSolver 
-
+		
 
 systemSolver:	systemSolver.o poisson.h poisson.o solution.o solution.h preconditioner.o preconditioner.h 
 	echo $@
