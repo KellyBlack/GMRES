@@ -98,10 +98,10 @@ int main(int argc,char **argv)
 			double xgrid = elliptical->getX(row);
 			double ygrid = elliptical->getX(col);
 			csvFile << xgrid << "," << ygrid << ","
-					<< (*x)(row,col) << ","
-					<< (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid) << ","
-					<< (*b)(row,col)
-					<< std::endl;
+					 << (*x)(row,col) << ","
+					 << (1.0-xgrid*xgrid)*(1.0-ygrid*ygrid) << ","
+					 << (*b)(row,col)
+					 << std::endl;
 		}
 	csvFile.close();
 #endif
