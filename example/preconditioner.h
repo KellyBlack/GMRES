@@ -64,8 +64,8 @@ public:
 	~Preconditioner();                              //< Destructor for the class
 
 	Solution solve(const Solution &vector);    //< Method to solve the
-																						 //< system associated with
-																						 //< the preconditioner.
+                                                   //< system associated with
+                                                   //< the preconditioner.
 
 	
 	/**
@@ -107,10 +107,11 @@ protected:
 
 private:
 
-	int N;           //< The number of grid points associated with the approximation.
-	double **vector; //< The vector that has the reciprocol of the diagonal entries of the operator.
+	int N;                //< The number of grid points associated with the approximation.
+	double **vector;      //< The vector that has the reciprocol of the diagonal entries
+                              //< of the operator.
 	double *intermediate; //< Vector used for the intermediate results
-						  //in the backwards solve for inverting the preconditioner.
+                              //< in the backwards solve for inverting the preconditioner.
 
 };
 
