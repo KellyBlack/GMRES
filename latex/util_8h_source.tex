@@ -1,0 +1,41 @@
+\hypertarget{util_8h_source}{}\doxysection{util.\+h}
+\mbox{\hyperlink{util_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ UTILROUTINE}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ UTILROUTINE}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ number>}
+\DoxyCodeLine{00056\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classArrayUtils}{ArrayUtils}}}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00060\ \ \ \ \ }
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{classArrayUtils_ae455be8bebbf7afe276ed904f90e3ccd}{ArrayUtils}}()\{\};\ \ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ Define\ the\ methods\ used\ to\ allocate\ the\ memory\ for\ and\ define}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ multi-\/dimensional\ arrays.}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{static}\ number\ *****\mbox{\hyperlink{classArrayUtils_af7a21c1393ced36d7cea1148fafee5e2}{fivetensor}}(\textcolor{keywordtype}{int}\ n1,\textcolor{keywordtype}{int}\ n2,\textcolor{keywordtype}{int}\ n3,\textcolor{keywordtype}{int}\ n4,\textcolor{keywordtype}{int}\ n5);\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{static}\ number\ ****\mbox{\hyperlink{classArrayUtils_a71310845e61316d6c20ee95ab9993ba0}{fourtensor}}(\textcolor{keywordtype}{int}\ n1,\textcolor{keywordtype}{int}\ n2,\textcolor{keywordtype}{int}\ n3,\textcolor{keywordtype}{int}\ n4);}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{static}\ number\ ***\mbox{\hyperlink{classArrayUtils_aa2da219f1ad1b52df38b7c4129a86ae7}{threetensor}}(\textcolor{keywordtype}{int}\ n1,\textcolor{keywordtype}{int}\ n2,\textcolor{keywordtype}{int}\ n3);}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{static}\ number\ **\mbox{\hyperlink{classArrayUtils_ae0e348c905bf5d20e2b85d600afc51b0}{twotensor}}(\textcolor{keywordtype}{int}\ n1,\textcolor{keywordtype}{int}\ n2);}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{static}\ number\ *\mbox{\hyperlink{classArrayUtils_a6936730cc8318a3d8b54346b8c592be0}{onetensor}}(\textcolor{keywordtype}{int}\ n1);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ Define\ the\ methods\ used\ to\ delete\ the\ memory\ that\ was\ allocated}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ for\ multi-\/dimensional\ arrays.}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArrayUtils_abf2d5013512716e6384e6ec81bdc4670}{delfivetensor}}(number\ *****u);}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArrayUtils_a85f8ffe8baeb0c2ed4b542f156e0b112}{delfourtensor}}(number\ ****u);}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArrayUtils_a9ee1e625ae9573821f498a356f46efcf}{delthreetensor}}(number\ ***u);}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArrayUtils_a590c411bac2e81903af76303c196c472}{deltwotensor}}(number\ **u);}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArrayUtils_a4de3995d577a3e830ce645f39e449581}{delonetensor}}(number\ *u);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#include\ "{}util.cpp"{}}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00092\ }
+
+\end{DoxyCode}

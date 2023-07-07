@@ -1,0 +1,292 @@
+\hypertarget{classArrayUtils}{}\doxysection{Array\+Utils\texorpdfstring{$<$}{<} number \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classArrayUtils}\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+
+
+Header file for the basic utilities associated with managing arrays.  
+
+
+
+
+{\ttfamily \#include $<$util.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classArrayUtils_ae455be8bebbf7afe276ed904f90e3ccd}{Array\+Utils}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static number $\ast$$\ast$$\ast$$\ast$$\ast$ \mbox{\hyperlink{classArrayUtils_af7a21c1393ced36d7cea1148fafee5e2}{fivetensor}} (int n1, int n2, int n3, int n4, int n5)
+\item 
+static number $\ast$$\ast$$\ast$$\ast$ \mbox{\hyperlink{classArrayUtils_a71310845e61316d6c20ee95ab9993ba0}{fourtensor}} (int n1, int n2, int n3, int n4)
+\item 
+static number $\ast$$\ast$$\ast$ \mbox{\hyperlink{classArrayUtils_aa2da219f1ad1b52df38b7c4129a86ae7}{threetensor}} (int n1, int n2, int n3)
+\item 
+static number $\ast$$\ast$ \mbox{\hyperlink{classArrayUtils_ae0e348c905bf5d20e2b85d600afc51b0}{twotensor}} (int n1, int n2)
+\item 
+static number $\ast$ \mbox{\hyperlink{classArrayUtils_a6936730cc8318a3d8b54346b8c592be0}{onetensor}} (int n1)
+\item 
+static void \mbox{\hyperlink{classArrayUtils_abf2d5013512716e6384e6ec81bdc4670}{delfivetensor}} (number $\ast$$\ast$$\ast$$\ast$$\ast$u)
+\item 
+static void \mbox{\hyperlink{classArrayUtils_a85f8ffe8baeb0c2ed4b542f156e0b112}{delfourtensor}} (number $\ast$$\ast$$\ast$$\ast$u)
+\item 
+static void \mbox{\hyperlink{classArrayUtils_a9ee1e625ae9573821f498a356f46efcf}{delthreetensor}} (number $\ast$$\ast$$\ast$u)
+\item 
+static void \mbox{\hyperlink{classArrayUtils_a590c411bac2e81903af76303c196c472}{deltwotensor}} (number $\ast$$\ast$u)
+\item 
+static void \mbox{\hyperlink{classArrayUtils_a4de3995d577a3e830ce645f39e449581}{delonetensor}} (number $\ast$u)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class number$>$\newline
+class Array\+Utils$<$ number $>$}
+Header file for the basic utilities associated with managing arrays. 
+
+\begin{DoxyAuthor}{Author}
+Kelly Black \href{mailto:kjblack@gmail.com}{\texttt{ kjblack@gmail.\+com}} 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyCopyright}{Copyright}
+BSD 2-\/Clause License
+\end{DoxyCopyright}
+\hypertarget{GMRES_8h_LICENSE}{}\doxysubsection{LICENSE}\label{GMRES_8h_LICENSE}
+Copyright (c) 2014, Kelly Black All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+
+
+\begin{DoxyEnumerate}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\end{DoxyEnumerate}
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \char`\"{}\+AS IS\char`\"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\hypertarget{GMRES_8h_DESCRIPTION}{}\doxysubsection{DESCRIPTION}\label{GMRES_8h_DESCRIPTION}
+Class to provide a set of basic utilities that are used by numerous other classes.
+
+This is the definition (header) file for the \mbox{\hyperlink{classArrayUtils}{Array\+Utils}} class. It includes the definitions for the methods that are used to construct and delete arrays used in a variety of other classes.
+
+\DoxyHorRuler{0}
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classArrayUtils_ae455be8bebbf7afe276ed904f90e3ccd}\label{classArrayUtils_ae455be8bebbf7afe276ed904f90e3ccd}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!ArrayUtils@{ArrayUtils}}
+\index{ArrayUtils@{ArrayUtils}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayUtils()}{ArrayUtils()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+\mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\mbox{\hyperlink{classArrayUtils}{\+::\+Array\+Utils}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\DoxyHorRuler{0}
+ Base constructor for the \mbox{\hyperlink{classArrayUtils}{Array\+Utils}} class.
+
+There is not anything to do so this is an empty method.
+
+\DoxyHorRuler{0}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classArrayUtils_abf2d5013512716e6384e6ec81bdc4670}\label{classArrayUtils_abf2d5013512716e6384e6ec81bdc4670}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!delfivetensor@{delfivetensor}}
+\index{delfivetensor@{delfivetensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{delfivetensor()}{delfivetensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+void \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::delfivetensor (\begin{DoxyParamCaption}\item[{number $\ast$$\ast$$\ast$$\ast$$\ast$}]{u }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for deleting a five dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & pointer to the array to be deleted.\\
+\hline
+\end{DoxyParams}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_a85f8ffe8baeb0c2ed4b542f156e0b112}\label{classArrayUtils_a85f8ffe8baeb0c2ed4b542f156e0b112}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!delfourtensor@{delfourtensor}}
+\index{delfourtensor@{delfourtensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{delfourtensor()}{delfourtensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+void \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::delfourtensor (\begin{DoxyParamCaption}\item[{number $\ast$$\ast$$\ast$$\ast$}]{u }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for deleting a four dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & pointer to the array to be deleted.\\
+\hline
+\end{DoxyParams}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_a4de3995d577a3e830ce645f39e449581}\label{classArrayUtils_a4de3995d577a3e830ce645f39e449581}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!delonetensor@{delonetensor}}
+\index{delonetensor@{delonetensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{delonetensor()}{delonetensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+void \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::delonetensor (\begin{DoxyParamCaption}\item[{number $\ast$}]{u }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for deleting a one dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & pointer to the array to be deleted.\\
+\hline
+\end{DoxyParams}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_a9ee1e625ae9573821f498a356f46efcf}\label{classArrayUtils_a9ee1e625ae9573821f498a356f46efcf}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!delthreetensor@{delthreetensor}}
+\index{delthreetensor@{delthreetensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{delthreetensor()}{delthreetensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+void \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::delthreetensor (\begin{DoxyParamCaption}\item[{number $\ast$$\ast$$\ast$}]{u }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for deleting a three dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & pointer to the array to be deleted.\\
+\hline
+\end{DoxyParams}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_a590c411bac2e81903af76303c196c472}\label{classArrayUtils_a590c411bac2e81903af76303c196c472}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!deltwotensor@{deltwotensor}}
+\index{deltwotensor@{deltwotensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{deltwotensor()}{deltwotensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+void \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::deltwotensor (\begin{DoxyParamCaption}\item[{number $\ast$$\ast$}]{u }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for deleting a two dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & pointer to the array to be deleted.\\
+\hline
+\end{DoxyParams}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_af7a21c1393ced36d7cea1148fafee5e2}\label{classArrayUtils_af7a21c1393ced36d7cea1148fafee5e2}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!fivetensor@{fivetensor}}
+\index{fivetensor@{fivetensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{fivetensor()}{fivetensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+number $\ast$$\ast$$\ast$$\ast$$\ast$ \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::fivetensor (\begin{DoxyParamCaption}\item[{int}]{n1,  }\item[{int}]{n2,  }\item[{int}]{n3,  }\item[{int}]{n4,  }\item[{int}]{n5 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for allocating a five dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n1} & Number of entries for the first dimension. \\
+\hline
+{\em n2} & Number of entries for the second dimension. \\
+\hline
+{\em n3} & Number of entries for the third dimension. \\
+\hline
+{\em n4} & Number of entries for the fourth dimension. \\
+\hline
+{\em n5} & Number of entries for the fifth dimension. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the array created.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_a71310845e61316d6c20ee95ab9993ba0}\label{classArrayUtils_a71310845e61316d6c20ee95ab9993ba0}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!fourtensor@{fourtensor}}
+\index{fourtensor@{fourtensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{fourtensor()}{fourtensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+number $\ast$$\ast$$\ast$$\ast$ \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::fourtensor (\begin{DoxyParamCaption}\item[{int}]{n1,  }\item[{int}]{n2,  }\item[{int}]{n3,  }\item[{int}]{n4 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for allocating a four dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n1} & Number of entries for the first dimension. \\
+\hline
+{\em n2} & Number of entries for the second dimension. \\
+\hline
+{\em n3} & Number of entries for the third dimension. \\
+\hline
+{\em n4} & Number of entries for the fourth dimension. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the array created.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_a6936730cc8318a3d8b54346b8c592be0}\label{classArrayUtils_a6936730cc8318a3d8b54346b8c592be0}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!onetensor@{onetensor}}
+\index{onetensor@{onetensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{onetensor()}{onetensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+number $\ast$ \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::onetensor (\begin{DoxyParamCaption}\item[{int}]{n1 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for allocating a one dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n1} & Number of entries for the dimension. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the array.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_aa2da219f1ad1b52df38b7c4129a86ae7}\label{classArrayUtils_aa2da219f1ad1b52df38b7c4129a86ae7}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!threetensor@{threetensor}}
+\index{threetensor@{threetensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{threetensor()}{threetensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+number $\ast$$\ast$$\ast$ \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::threetensor (\begin{DoxyParamCaption}\item[{int}]{n1,  }\item[{int}]{n2,  }\item[{int}]{n3 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for allocating a three dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n1} & Number of entries for the first dimension. \\
+\hline
+{\em n2} & Number of entries for the second dimension. \\
+\hline
+{\em n3} & Number of entries for the third dimensions. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the array created.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ \mbox{\Hypertarget{classArrayUtils_ae0e348c905bf5d20e2b85d600afc51b0}\label{classArrayUtils_ae0e348c905bf5d20e2b85d600afc51b0}} 
+\index{ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}!twotensor@{twotensor}}
+\index{twotensor@{twotensor}!ArrayUtils$<$ number $>$@{ArrayUtils$<$ number $>$}}
+\doxysubsubsection{\texorpdfstring{twotensor()}{twotensor()}}
+{\footnotesize\ttfamily template$<$class number $>$ \\
+number $\ast$$\ast$ \mbox{\hyperlink{classArrayUtils}{Array\+Utils}}$<$ number $>$\+::twotensor (\begin{DoxyParamCaption}\item[{int}]{n1,  }\item[{int}]{n2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\DoxyHorRuler{0}
+ Template for allocating a two dimensional array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n1} & Number of entries for the first dimension. \\
+\hline
+{\em n2} & Number of entries for the second dimension. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the array created.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{util_8h}{util.\+h}}\item 
+util.\+cpp\end{DoxyCompactItemize}

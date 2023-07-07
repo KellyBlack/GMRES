@@ -1,0 +1,208 @@
+\hypertarget{GMRES_8h_source}{}\doxysection{GMRES.\+h}
+\mbox{\hyperlink{GMRES_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{util_8h}{util.h}}"{}}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00080\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Approximation,\ \textcolor{keyword}{class}\ Double\ >}
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{GMRES_8h_ac852c06c214f847a9c4da97c33677b32}{Update}}}
+\DoxyCodeLine{00082\ (Double\ **H,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//<!\ The\ upper\ diagonal\ matrix\ constructed\ in\ the\ GMRES\ routine.}}
+\DoxyCodeLine{00083\ \ Approximation\ *x,\ \ \ \textcolor{comment}{//<!\ The\ current\ approximation\ to\ the\ linear\ system.}}
+\DoxyCodeLine{00084\ \ Double\ *s,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//<!\ The\ vector\ e\_1\ that\ has\ been\ multiplied\ by\ the\ Givens\ rotations.}}
+\DoxyCodeLine{00085\ \ std::vector<Approximation>\ *v,\ \ \textcolor{comment}{//<!\ The\ orthogonal\ basis\ vectors\ for\ the\ Krylov\ subspace.}}
+\DoxyCodeLine{00086\ \ \textcolor{keywordtype}{int}\ dimension)\ \ \ \ \ \ \textcolor{comment}{//<!\ The\ number\ of\ vectors\ in\ the\ basis\ for\ the\ Krylov\ subspace.}}
+\DoxyCodeLine{00087\ \{}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \textcolor{comment}{//\ Solve\ for\ the\ coefficients,\ i.e.\ solve\ for\ c\ in}}
+\DoxyCodeLine{00090\ \ \ \textcolor{comment}{//\ H*c=s,\ but\ we\ do\ it\ in\ place.}}
+\DoxyCodeLine{00091\ \ \ \textcolor{keywordtype}{int}\ lupe;}
+\DoxyCodeLine{00092\ \ \ \textcolor{keywordflow}{for}\ (lupe\ =\ dimension;\ lupe\ >=\ 0;\ -\/-\/lupe)\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ s[lupe]\ =\ s[lupe]/H[lupe][lupe];}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ innerLupe\ =\ lupe\ -\/\ 1;\ innerLupe\ >=\ 0;\ -\/-\/innerLupe)}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Subtract\ off\ the\ parts\ from\ the\ upper\ diagonal\ of\ the}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ matrix.}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s[innerLupe]\ -\/=\ \ s[lupe]*H[innerLupe][lupe];}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \textcolor{comment}{//\ Finally\ update\ the\ approximation.}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{typename}\ std::vector<Approximation>::iterator\ ptr\ =\ v-\/>begin();}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordflow}{for}\ (lupe\ =\ 0;\ lupe\ <=\ dimension;\ lupe++)}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ *x\ +=\ (*ptr++)\ *\ s[lupe];}
+\DoxyCodeLine{00107\ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ Operation,\textcolor{keyword}{class}\ Approximation,\textcolor{keyword}{class}\ Preconditioner,\textcolor{keyword}{class}\ Double>}
+\DoxyCodeLine{00119\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{GMRES_8h_a96d32531b06848c7a72cf9da6f0f1f0c}{GMRES}}}
+\DoxyCodeLine{00120\ (Operation*\ linearization,\ }
+\DoxyCodeLine{00121\ \ Approximation*\ solution,\ \ }
+\DoxyCodeLine{00122\ \ Approximation*\ rhs,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00123\ \ Preconditioner*\ precond,\ \ }
+\DoxyCodeLine{00124\ \ \textcolor{keywordtype}{int}\ krylovDimension,\ \ \ \ \ \ }
+\DoxyCodeLine{00125\ \ \textcolor{keywordtype}{int}\ numberRestarts,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00126\ \ Double\ tolerance\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00127\ \ )}
+\DoxyCodeLine{00128\ \{}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{comment}{//\ Allocate\ the\ space\ for\ the\ givens\ rotations,\ and\ the\ upper}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ Hessenburg\ matrix.}}
+\DoxyCodeLine{00132\ \ \ \ \ Double\ **H\ \ \ \ \ \ =\ \mbox{\hyperlink{classArrayUtils_ae0e348c905bf5d20e2b85d600afc51b0}{ArrayUtils<Double>::twotensor}}(krylovDimension+1,krylovDimension);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ The\ Givens\ rotations\ include\ the\ sine\ and\ cosine\ term.\ The}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//\ cosine\ term\ is\ in\ column\ zero,\ and\ the\ sine\ term\ is\ in\ column}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ one.}}
+\DoxyCodeLine{00137\ \ \ \ \ Double\ **givens\ =\ \mbox{\hyperlink{classArrayUtils_ae0e348c905bf5d20e2b85d600afc51b0}{ArrayUtils<Double>::twotensor}}(krylovDimension+1,2);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{//\ The\ vector\ s\ the\ right\ hand\ side\ for\ the\ system\ that\ the\ matrix}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ H\ satisfies\ in\ order\ to\ minimize\ the\ residual\ over\ the\ Krylov}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ subspace.}}
+\DoxyCodeLine{00142\ \ \ \ \ Double\ *s\ =\ \mbox{\hyperlink{classArrayUtils_a6936730cc8318a3d8b54346b8c592be0}{ArrayUtils<Double>::onetensor}}(krylovDimension+1);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{//\ Determine\ the\ residual\ and\ allocate\ the\ space\ for\ the\ Krylov}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{comment}{//\ subspace.}}
+\DoxyCodeLine{00146\ \ \ \ \ std::vector<Approximation>\ V(krylovDimension+1,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Approximation(solution-\/>getN()));}
+\DoxyCodeLine{00148\ \ \ \ \ Approximation\ residual\ =\ precond-\/>solve((*rhs)-\/(*linearization)*(*solution));}
+\DoxyCodeLine{00149\ \ \ \ \ Double\ rho\ \ \ \ \ \ \ \ \ \ \ \ \ =\ residual.norm();}
+\DoxyCodeLine{00150\ \ \ \ \ Double\ normRHS\ \ \ \ \ \ \ \ \ =\ rhs-\/>norm();}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{comment}{//\ variable\ for\ keeping\ track\ of\ how\ many\ restarts\ had\ to\ be\ used.}}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{int}\ totalRestarts\ =\ 0;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{if}(normRHS\ <\ 1.0E-\/5)}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ normRHS\ =\ 1.0;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//\ Go\ through\ the\ requisite\ number\ of\ restarts.}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{int}\ iteration\ =\ 1;}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordflow}{while}(\ (-\/-\/numberRestarts\ >=\ 0)\ \&\&\ (rho\ >\ tolerance*normRHS))}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ first\ vector\ in\ the\ Krylov\ subspace\ is\ the\ normalized}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ residual.}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ V[0]\ =\ residual\ *\ (1.0/rho);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Need\ to\ zero\ out\ the\ s\ vector\ in\ case\ of\ restarts}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ initialize\ the\ s\ vector\ used\ to\ estimate\ the\ residual.}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ lupe=0;lupe<=krylovDimension;++lupe)}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s[lupe]\ =\ 0.0;}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ s[0]\ =\ rho;}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Go\ through\ and\ generate\ the\ pre-\/determined\ number\ of\ vectors}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ the\ Krylov\ subspace.}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ iteration=0;iteration<krylovDimension;++iteration)}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ next\ entry\ in\ the\ vectors\ that\ form\ the\ basis\ for}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ Krylov\ subspace.}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ V[iteration+1]\ =\ precond-\/>solve((*linearization)*V[iteration]);}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Perform\ the\ modified\ Gram-\/Schmidt\ method\ to\ orthogonalize}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ new\ vector.}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ row;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::vector<Approximation>::iterator\ ptr\ =\ V.begin();}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(row=0;row<=iteration;++row)}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H[row][iteration]\ =\ Approximation::dot(V[iteration+1],\ *ptr);}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//subtract\ H[row][iteration]*V[row]\ from\ the\ current\ vector}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ V[iteration+1].axpy(\&(*ptr++),-\/H[row][iteration]);}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H[iteration+1][iteration]\ =\ V[iteration+1].norm();}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ V[iteration+1]\ *=\ (1.0/H[iteration+1][iteration]);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Apply\ the\ Givens\ Rotations\ to\ insure\ that\ H\ is}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ an\ upper\ diagonal\ matrix.\ First\ apply\ previous}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rotations\ to\ the\ current\ matrix.}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ tmp;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (row\ =\ 0;\ row\ <\ iteration;\ row++)}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ givens[row][0]*H[row][iteration]\ +}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[row][1]*H[row+1][iteration];}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H[row+1][iteration]\ =\ -\/givens[row][1]*H[row][iteration]\ }
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ givens[row][0]*H[row+1][iteration];}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H[row][iteration]\ \ =\ tmp;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Figure\ out\ the\ next\ Givens\ rotation.}}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(H[iteration+1][iteration]\ ==\ 0.0)}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ It\ is\ already\ lower\ diagonal.\ Just\ leave\ it\ be....}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][0]\ =\ 1.0;}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][1]\ =\ 0.0;}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (fabs(H[iteration+1][iteration])\ >\ fabs(H[iteration][iteration]))}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ off\ diagonal\ entry\ has\ a\ larger}}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ magnitude.\ Use\ the\ ratio\ of\ the}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ diagonal\ entry\ over\ the\ off\ diagonal.}}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ H[iteration][iteration]/H[iteration+1][iteration];}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][1]\ =\ 1.0/sqrt(1.0+tmp*tmp);}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][0]\ =\ tmp*givens[iteration][1];}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ off\ diagonal\ entry\ has\ a\ smaller}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ magnitude.\ Use\ the\ ratio\ of\ the\ off}}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ diagonal\ entry\ to\ the\ diagonal\ entry.}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ H[iteration+1][iteration]/H[iteration][iteration];}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][0]\ =\ 1.0/sqrt(1.0+tmp*tmp);}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][1]\ =\ tmp*givens[iteration][0];}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Apply\ the\ new\ Givens\ rotation\ on\ the}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ new\ entry\ in\ the\ uppper\ Hessenberg\ matrix.}}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ givens[iteration][0]*H[iteration][iteration]\ +\ }
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][1]*H[iteration+1][iteration];}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H[iteration+1][iteration]\ =\ -\/givens[iteration][1]*H[iteration][iteration]\ +\ }
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ givens[iteration][0]*H[iteration+1][iteration];}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H[iteration][iteration]\ =\ tmp;}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Finally\ apply\ the\ new\ Givens\ rotation\ on\ the\ s}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ vector}}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ givens[iteration][0]*s[iteration]\ +\ givens[iteration][1]*s[iteration+1];}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s[iteration+1]\ =\ -\/givens[iteration][1]*s[iteration]\ +\ givens[iteration][1]*s[iteration+1];}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s[iteration]\ =\ tmp;}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ fabs(s[iteration+1]);}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(rho\ <\ tolerance*normRHS)}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ are\ close\ enough!\ Update\ the\ approximation.}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{GMRES_8h_ac852c06c214f847a9c4da97c33677b32}{Update}}(H,solution,s,\&V,iteration);}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classArrayUtils_a590c411bac2e81903af76303c196c472}{ArrayUtils<double>::deltwotensor}}(givens);}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classArrayUtils_a590c411bac2e81903af76303c196c472}{ArrayUtils<double>::deltwotensor}}(H);}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classArrayUtils_a4de3995d577a3e830ce645f39e449581}{ArrayUtils<double>::delonetensor}}(s);}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//delete\ []\ V;}}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//tolerance\ =\ rho/normRHS;}}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}(iteration+totalRestarts*krylovDimension);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{comment}{//\ for(iteration)}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ have\ exceeded\ the\ number\ of\ iterations.\ Update\ the}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ approximation\ and\ start\ over.}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ totalRestarts\ +=\ 1;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{GMRES_8h_ac852c06c214f847a9c4da97c33677b32}{Update}}(H,solution,s,\&V,iteration-\/1);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ residual\ =\ precond-\/>solve((*linearization)*(*solution)\ -\/\ (*rhs));}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ residual.norm();}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \}\ \textcolor{comment}{//\ while(numberRestarts,rho)}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \mbox{\hyperlink{classArrayUtils_a590c411bac2e81903af76303c196c472}{ArrayUtils<double>::deltwotensor}}(givens);}
+\DoxyCodeLine{00274\ \ \ \ \ \mbox{\hyperlink{classArrayUtils_a590c411bac2e81903af76303c196c472}{ArrayUtils<double>::deltwotensor}}(H);}
+\DoxyCodeLine{00275\ \ \ \ \ \mbox{\hyperlink{classArrayUtils_a4de3995d577a3e830ce645f39e449581}{ArrayUtils<double>::delonetensor}}(s);}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{comment}{//delete\ []\ V;}}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{comment}{//tolerance\ =\ rho/normRHS;}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{if}(rho\ <\ tolerance*normRHS)}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}(iteration+totalRestarts*krylovDimension);}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordflow}{return}(0);}
+\DoxyCodeLine{00283\ \}}
+\DoxyCodeLine{00284\ }
+
+\end{DoxyCode}

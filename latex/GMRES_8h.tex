@@ -1,0 +1,94 @@
+\hypertarget{GMRES_8h}{}\doxysection{GMRES.\+h File Reference}
+\label{GMRES_8h}\index{GMRES.h@{GMRES.h}}
+
+
+Template files for implementing a GMRES algorithm to solve a linear sytem.  
+
+
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Approximation , class Double $>$ }\\void \mbox{\hyperlink{GMRES_8h_ac852c06c214f847a9c4da97c33677b32}{Update}} (Double $\ast$$\ast$H, Approximation $\ast$x, Double $\ast$s, std\+::vector$<$ Approximation $>$ $\ast$v, int dimension)
+\item 
+{\footnotesize template$<$class Operation , class Approximation , class Preconditioner , class Double $>$ }\\int \mbox{\hyperlink{GMRES_8h_a96d32531b06848c7a72cf9da6f0f1f0c}{GMRES}} (Operation $\ast$linearization, Approximation $\ast$solution, Approximation $\ast$rhs, Preconditioner $\ast$precond, int krylov\+Dimension, int number\+Restarts, Double tolerance)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Template files for implementing a GMRES algorithm to solve a linear sytem. 
+
+\DoxyHorRuler{0}
+
+
+\begin{DoxyAuthor}{Author}
+Kelly Black \href{mailto:kjblack@gmail.com}{\texttt{ kjblack@gmail.\+com}} 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+2 
+\end{DoxyVersion}
+\begin{DoxyCopyright}{Copyright}
+BSD 2-\/Clause License
+\end{DoxyCopyright}
+\hypertarget{GMRES_8h_LICENSE}{}\doxysubsection{LICENSE}\label{GMRES_8h_LICENSE}
+Copyright (c) 2014, Kelly Black All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met\+:
+
+
+\begin{DoxyEnumerate}
+\item Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+\item Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+\end{DoxyEnumerate}
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \char`\"{}\+AS IS\char`\"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\hypertarget{GMRES_8h_DESCRIPTION}{}\doxysubsection{DESCRIPTION}\label{GMRES_8h_DESCRIPTION}
+This file includes the template functions necessary to implement a restarted GMRES algorithm. This is based on the pseudo code given in the book Templates for the Solution of Linear Systems\+: Building Blocks for Iterative Methods, 2nd Edition \cite{templates} .
+
+Also, some changes were implemented based on the matlab code by John Burkardt \cite{BurkardtCode} \href{http://people.sc.fsu.edu/~jburkardt/m_src/toms866/solvers/gmres_r.m}{\texttt{ http\+://people.\+sc.\+fsu.\+edu/$\sim$jburkardt/m\+\_\+src/toms866/solvers/gmres\+\_\+r.\+m}}
+
+The idea for using a template came from the IML++ code \cite{imlCode} \href{http://math.nist.gov/iml++/}{\texttt{ http\+://math.\+nist.\+gov/iml++/}} Also, the method for calculating the entries for the Givens rotation matrices came from the IML++ code as well.
+
+Additional sources that informed this work are Tim Kelley\textquotesingle{}s book Iterative Methods for Linear and Nonlinear Equations \cite{iterativeMethods} Another book is is Yousef Saad\textquotesingle{}s book Iterative Methods for Sparse Linear Systems \cite{sparseIterative}
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{GMRES_8h_a96d32531b06848c7a72cf9da6f0f1f0c}\label{GMRES_8h_a96d32531b06848c7a72cf9da6f0f1f0c}} 
+\index{GMRES.h@{GMRES.h}!GMRES@{GMRES}}
+\index{GMRES@{GMRES}!GMRES.h@{GMRES.h}}
+\doxysubsubsection{\texorpdfstring{GMRES()}{GMRES()}}
+{\footnotesize\ttfamily template$<$class Operation , class Approximation , class Preconditioner , class Double $>$ \\
+int GMRES (\begin{DoxyParamCaption}\item[{Operation $\ast$}]{linearization,  }\item[{Approximation $\ast$}]{solution,  }\item[{Approximation $\ast$}]{rhs,  }\item[{Preconditioner $\ast$}]{precond,  }\item[{int}]{krylov\+Dimension,  }\item[{int}]{number\+Restarts,  }\item[{Double}]{tolerance }\end{DoxyParamCaption})}
+
+\DoxyHorRuler{0}
+ Implementation of the restarted GMRES algorithm. Follows the algorithm given in the book Templates for the Solution of Linear Systems\+: Building Blocks for Iterative Methods, 2nd Edition.
+
+\begin{DoxyReturn}{Returns}
+The number of iterations required. Returns zero if it did not converge. 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em linearization} & Performs the linearization of the PDE on the approximation.\\
+\hline
+{\em solution} & The approximation to the linear system. (and initial estimate!)\\
+\hline
+{\em rhs} & the right hand side of the equation to solve.\\
+\hline
+{\em precond} & The preconditioner used for the linear system.\\
+\hline
+{\em krylov\+Dimension} & The number of vectors to generate in the Krylov subspace.\\
+\hline
+{\em number\+Restarts} & Number of times to repeat the GMRES iterations.\\
+\hline
+{\em tolerance} & How small the residual should be to terminate the GMRES iterations. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{GMRES_8h_ac852c06c214f847a9c4da97c33677b32}\label{GMRES_8h_ac852c06c214f847a9c4da97c33677b32}} 
+\index{GMRES.h@{GMRES.h}!Update@{Update}}
+\index{Update@{Update}!GMRES.h@{GMRES.h}}
+\doxysubsubsection{\texorpdfstring{Update()}{Update()}}
+{\footnotesize\ttfamily template$<$class Approximation , class Double $>$ \\
+void Update (\begin{DoxyParamCaption}\item[{Double $\ast$$\ast$}]{H,  }\item[{Approximation $\ast$}]{x,  }\item[{Double $\ast$}]{s,  }\item[{std\+::vector$<$ Approximation $>$ $\ast$}]{v,  }\item[{int}]{dimension }\end{DoxyParamCaption})}
+
+\DoxyHorRuler{0}
+ Update the current approximation to the solution to the linear system. This assumes that the update is created using a GMRES routine, and the upper Hessenberg matrix has been transformed to an upper diagonal matrix already. Note that it changes the values of the values in the coefficients vector, s, which means that the s vector cannot be reused after this without being re-\/initialized. 
