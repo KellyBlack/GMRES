@@ -62,12 +62,13 @@
 /** ************************************************************************
  * Template for allocating a five dimensional array.
  *
- *	@param n1 Number of entries for the first dimension.
+ *  @param n1 Number of entries for the first dimension.
  *  @param n2 Number of entries for the second dimension.
  *  @param n3 Number of entries for the third dimension.
  *  @param n4 Number of entries for the fourth dimension.
  *  @param n5 Number of entries for the fifth dimension.
- *  @return A pointer to the array.
+ *  @return A pointer to the array created.
+ *
  * ************************************************************************ */
 template <class number>
 number *****ArrayUtils<number>::fivetensor(int n1,int n2,int n3,int n4,int n5) {
@@ -129,11 +130,12 @@ number *****ArrayUtils<number>::fivetensor(int n1,int n2,int n3,int n4,int n5) {
 /** ************************************************************************
  * Template for allocating a four dimensional array.
  *
- *	@param n1 Number of entries for the first dimension.
+ *  @param n1 Number of entries for the first dimension.
  *  @param n2 Number of entries for the second dimension.
  *  @param n3 Number of entries for the third dimension.
  *  @param n4 Number of entries for the fourth dimension.
- *  @return A pointer to the array.
+ *  @return A pointer to the array created.
+ *
  * ************************************************************************ */
 template <class number>
 number ****ArrayUtils<number>::fourtensor(int n1,int n2,int n3,int n4) {
@@ -185,10 +187,11 @@ number ****ArrayUtils<number>::fourtensor(int n1,int n2,int n3,int n4) {
 /** ************************************************************************
  * Template for allocating a three dimensional array.
  *
- *	@param n1 Number of entries for the first dimension.
+ *  @param n1 Number of entries for the first dimension.
  *  @param n2 Number of entries for the second dimension.
  *  @param n3 Number of entries for the third dimensions.
- *  @return A pointer to the array.
+ *  @return A pointer to the array created.
+ *
  * ************************************************************************ */
 template <class number>
 number ***ArrayUtils<number>::threetensor(int n1,int n2,int n3) {
@@ -232,9 +235,10 @@ number ***ArrayUtils<number>::threetensor(int n1,int n2,int n3) {
 /** ************************************************************************
  * Template for allocating a two dimensional array.
  *
- *	@param n1 Number of entries for the first dimension.
- *  @param n2 Number of entries for the second dimension.
- *  @return A pointer to the array.
+ * @param n1 Number of entries for the first dimension.
+ * @param n2 Number of entries for the second dimension.
+ * @return A pointer to the array created.
+ *
  * ************************************************************************ */
 template <class number>
 number **ArrayUtils<number>::twotensor(int n1,int n2){
@@ -271,8 +275,9 @@ number **ArrayUtils<number>::twotensor(int n1,int n2){
 /** ************************************************************************
  * Template for allocating a one dimensional array.
  *
- *	@param n1 Number of entries for the dimension.
+ *  @param n1 Number of entries for the dimension.
  *  @return A pointer to the array.
+ *
  * ************************************************************************ */
 template <class number>
 number *ArrayUtils<number>::onetensor(int n1) {
@@ -297,8 +302,8 @@ number *ArrayUtils<number>::onetensor(int n1) {
 /** *************************************************************
  * Template for deleting a five dimensional array.
  *
- * @param A pointer to the array.
- * @return N/A
+ * @param u pointer to the array to be deleted.
+ *
  * ************************************************************** */
 template <class number>
 void ArrayUtils<number>::delfivetensor(number *****u) {
@@ -318,8 +323,8 @@ void ArrayUtils<number>::delfivetensor(number *****u) {
 /** *************************************************************
  * Template for deleting a four dimensional array.
  *
- * @param A pointer to the array.
- * @return N/A
+ * @param u pointer to the array to be deleted.
+ * 
  * ************************************************************** */
 template <class number>
 void ArrayUtils<number>::delfourtensor(number ****u) {
@@ -339,8 +344,8 @@ void ArrayUtils<number>::delfourtensor(number ****u) {
 /** *************************************************************
  * Template for deleting a three dimensional array.
  *
- * @param A pointer to the array.
- * @return N/A
+ * @param u pointer to the array to be deleted.
+ * 
  * ************************************************************** */
 template <class number>
 void ArrayUtils<number>::delthreetensor(number ***u) {
@@ -359,8 +364,8 @@ void ArrayUtils<number>::delthreetensor(number ***u) {
 /** *************************************************************
  * Template for deleting a two dimensional array.
  *
- * @param A pointer to the array.
- * @return N/A
+ * @param u pointer to the array to be deleted.
+ * 
  * ************************************************************** */
 template <class number>
 void ArrayUtils<number>::deltwotensor(number **u){
@@ -379,8 +384,8 @@ void ArrayUtils<number>::deltwotensor(number **u){
 /** *************************************************************
  * Template for deleting a one dimensional array.
  *
- * @param A pointer to the array.
- * @return N/A
+ * @param u pointer to the array to be deleted.
+ * 
  * ************************************************************** */
 template <class number>
 void ArrayUtils<number>::delonetensor(number *u) {

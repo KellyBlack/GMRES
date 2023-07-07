@@ -42,7 +42,7 @@
  * 
  * Also, some changes were implemented based on the matlab code by
  * John Burkardt @cite BurkardtCode
- * http://people.sc.fsu.edu/\textasciitilde jburkardt/m_src/toms866/solvers/gmres_r.m
+ * http://people.sc.fsu.edu/~jburkardt/m_src/toms866/solvers/gmres_r.m
  *
  * The idea for using a template came from the IML++ code @cite imlCode
  * http://math.nist.gov/iml++/
@@ -76,7 +76,6 @@
  * the values in the coefficients vector, s, which means that the s
  * vector cannot be reused after this without being re-initialized.
  *
- * @return N/A
  ************************************************************************ */
 template <class Approximation, class Double >
 void Update
@@ -114,8 +113,7 @@ void Update
  * algorithm given in the book Templates for the Solution of Linear
  * Systems: Building Blocks for Iterative Methods, 2nd Edition.
  *
- * @return The number of iterations required. Returns zero if it did 
- *         not converge.
+ * @return The number of iterations required. Returns zero if it did not converge.
  ************************************************************************ */
 template<class Operation,class Approximation,class Preconditioner,class Double>
 int GMRES
