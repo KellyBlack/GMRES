@@ -29,7 +29,7 @@
  * ********************************************************************************* */
 
 
-
+#define NUMBER 64
 #include "poisson.h"
 #include "solution.h"
 #include "preconditioner.h"

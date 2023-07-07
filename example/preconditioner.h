@@ -51,7 +51,11 @@
  *
  * ********************************************************************************* */
 
+// The constant NUMBER should be set before this file is read.
+// If it is not set, then this will be used for the default.
+#ifndef NUMBER
 #define NUMBER 64
+#endif
 
 class Solution;
 
