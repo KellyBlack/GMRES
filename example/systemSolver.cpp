@@ -50,7 +50,7 @@ int main(int argc,char **argv)
 		new Preconditioner(NUMBER);      // The preconditioner for the system.
 
 	int restart = 10;                    // Number of restarts to allow
-	int maxIt = 41;                      // Dimension of the Krylov subspace
+	int krylovDim = 41;                  // Dimension of the Krylov subspace
 	double tol = 1.0E-8;                 // How close to make the approximation.
 
 	int lupe;
@@ -70,7 +70,7 @@ int main(int argc,char **argv)
 	(*b)(NUMBER) = -0.0;
 
 	// Find an approximation to the system!
-	int result= GMRES(elliptical,x,b,pre,maxIt,restart,tol);
+	int result= GMRES(elliptical,x,b,pre,krylovDim,restart,tol);
 
 	std::cout << "Iterations: " << result << " residual: " << tol << std::endl;
 #define SOLUTION
